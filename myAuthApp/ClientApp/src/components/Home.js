@@ -1,4 +1,7 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
+import {googleEndpoints} from './../auth/endpoints'
+import GoogleButton from 'react-google-button'
+
 
 export const Home = (props) => {
 
@@ -31,9 +34,12 @@ export const Home = (props) => {
 const LoginForm = (props) => {
   return(
     <div className="login-form">
+
+    <GoogleButton onClick={googleLogin} />
+
       <input type="text" placeholder="username"/>
       <input type="password" placeholder="password"/>
-      <button>login</button>
+          <button>login</button>
       <p className="message">Not registered? <a onClick={() => props.setShowLogin(false)}>Create an account</a></p>
     </div>
   )
@@ -44,9 +50,11 @@ const SignUpForm = (props) => {
     <div className="register-form">
       <input type="text" placeholder="name"/>
       <input type="password" placeholder="password"/>
-      <input type="text" placeholder="email address"/>
-      <button>create</button>
+          <input type="text" placeholder="email address" />
+          <button>create</button>
       <p className="message">Already registered? <a onClick={() => props.setShowLogin(true)}>Sign In</a></p>
     </div>
   )
 }
+
+const googleLogin = () => window.location.href = googleEndpoints.auth;
