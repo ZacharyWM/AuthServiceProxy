@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {googleEndpoints} from './../auth/endpoints'
+import {googleEndpoints} from '../auth/auth'
 import GoogleButton from 'react-google-button'
 
 
@@ -35,7 +35,7 @@ const LoginForm = (props) => {
   return(
     <div className="login-form">
 
-    <GoogleButton onClick={googleLogin} />
+      <GoogleButton onClick={() => window.location.href = googleEndpoints.auth} />
 
       <input type="text" placeholder="username"/>
       <input type="password" placeholder="password"/>
@@ -56,5 +56,3 @@ const SignUpForm = (props) => {
     </div>
   )
 }
-
-const googleLogin = () => window.location.href = googleEndpoints.auth;
