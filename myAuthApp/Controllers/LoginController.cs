@@ -27,10 +27,20 @@ namespace myAuthApp.Controllers
             return new {currentAction = "Get"};
         }
 
-        [HttpGet("check")]
-        public object Check()
+        [HttpPost("auth")]
+        public object GetAuthToken(AuthCode authCode)
         {
-            return new {currentAction = "Check"};
+            //get auth token from google, save it, return JWT associated with auth token to allow app access
+            
+            return new {theCode = authCode.code, theScope = authCode.scope};
         }
+        
+    }
+
+    public struct AuthCode{
+        public string code { get; set; }
+        public string scope { get; set; }
+        public string state { get; set; }
+        public string redirect_uri { get; set; }
     }
 }

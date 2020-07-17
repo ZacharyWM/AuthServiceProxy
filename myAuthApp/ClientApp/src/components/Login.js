@@ -3,7 +3,7 @@ import {googleEndpoints} from '../auth/auth'
 import GoogleButton from 'react-google-button'
 
 
-export const Home = (props) => {
+export const Login = (props) => {
 
   const [showLogin, setShowLogin] = useState(true);
   const [loginInfo, setLoginInfo] = useState({userName:'', password:''})
