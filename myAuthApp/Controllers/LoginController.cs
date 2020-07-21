@@ -1,15 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using myAuthApp.Services;
 
 namespace myAuthApp.Controllers
 {
@@ -19,99 +11,34 @@ namespace myAuthApp.Controllers
     {
 
         private readonly ILogger<LoginController> _logger;
+        private readonly ITokenService _tokenService;
 
-        public LoginController(ILogger<LoginController> logger)
+        public LoginController(ILogger<LoginController> logger, ITokenService tokenService)
         {
             _logger = logger;
+            _tokenService = tokenService;
         }
 
 
         [HttpGet] // default route
         public object Get()
         {
-            return new {currentAction = "Get"};
+            return new { currentAction = "Get" };
         }
 
         [HttpPost("auth")]
         public object GetAuthToken(AuthCode authCode)
         {
+            Guid userId = Guid.NewGuid();
+
             //get auth token from google, save it, return JWT associated with auth token to allow app access
-            JwtSecurityToken t = new JwtSecurityToken();
 
-            return new {theCode = authCode.code, theScope = authCode.scope, theToken = GetToken()};
+            return new { theCode = authCode.code, theScope = authCode.scope, theToken = _tokenService.GetToken(userId) };
         }
-
-
-        private string _tokenSecret = "asdv234234^&%&^%&^hjsdfb2%%%";
-        private string GetToken()
-        {
-            // https://dotnetcoretutorials.com/2020/01/15/creating-and-validating-jwt-tokens-in-asp-net-core/
-
-            var mySecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_tokenSecret));
-
-            var myIssuer = "http://mysite.com";
-            var myAudience = "http://myaudience.com";
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, "Zach"),
-                    new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
-                    new Claim(ClaimTypes.Role, "Admin"),
-                    new Claim("IsCool", "True")
-                }),
-                Expires = DateTime.UtcNow.AddDays(1),
-                Issuer = myIssuer,
-                Audience = myAudience,
-                SigningCredentials = new SigningCredentials(mySecurityKey, SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            return tokenHandler.WriteToken(token);
-        }
-
-        public bool ValidateToken(string token)
-        {
-            var mySecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_tokenSecret));
-
-            var myIssuer = "http://mysite.com";
-            var myAudience = "http://myaudience.com";
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            try
-            {
-                tokenHandler.ValidateToken(token, new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidIssuer = myIssuer,
-                    ValidAudience = myAudience,
-                    IssuerSigningKey = mySecurityKey
-                }, out SecurityToken validatedToken);
-            }
-            catch
-            {
-                return false;
-            }
-            return true;
-        }
-
-        public string GetClaim(string token, string claimType)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var securityToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
-
-            var stringClaimValue = securityToken.Claims.First(claim => claim.Type == claimType).Value;
-            return stringClaimValue;
-        }
-        
     }
 
-    public struct AuthCode{
+    public struct AuthCode
+    {
         public string code { get; set; }
         public string scope { get; set; }
         public string state { get; set; }
