@@ -2,6 +2,8 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using myAuthApp.Services;
+using myAuthApp.Models;
+using System.Net.Http;
 
 namespace myAuthApp.Controllers
 {
@@ -12,11 +14,15 @@ namespace myAuthApp.Controllers
 
         private readonly ILogger<LoginController> _logger;
         private readonly ITokenService _tokenService;
+        private readonly IGoogleAuth _googleAuth;
+        private readonly IHttpClientFactory _clientFactory;
 
-        public LoginController(ILogger<LoginController> logger, ITokenService tokenService)
+        public LoginController(ILogger<LoginController> logger, ITokenService tokenService, IGoogleAuth googleAuth, IHttpClientFactory clientFactory)
         {
             _logger = logger;
             _tokenService = tokenService;
+            _googleAuth = googleAuth;
+            _clientFactory = clientFactory;
         }
 
 
@@ -27,9 +33,11 @@ namespace myAuthApp.Controllers
         }
 
         [HttpPost("auth")]
-        public object GetAuthToken(AuthCode authCode)
+        public async System.Threading.Tasks.Task<object> GetAuthTokenAsync(AuthCode authCode)
         {
             Guid userId = Guid.NewGuid();
+
+            var authToken = await _googleAuth.GetToken(authCode);
 
             //get auth token from google, save it, return JWT associated with auth token to allow app access
 
@@ -37,11 +45,4 @@ namespace myAuthApp.Controllers
         }
     }
 
-    public struct AuthCode
-    {
-        public string code { get; set; }
-        public string scope { get; set; }
-        public string state { get; set; }
-        public string redirect_uri { get; set; }
-    }
 }

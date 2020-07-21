@@ -1,40 +1,53 @@
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using myAuthApp.Models;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
 
 namespace myAuthApp.Services
 {
     public class GoogleAuth : IGoogleAuth
     {
-        IHttpClientFactory _clientFactory;
+        private const string _tokenEndpoint = "https://accounts.google.com/o/oauth2/token";
 
-        public GoogleAuth(IHttpClientFactory clientFactory)
+        public GoogleAuth()
         {
-            _clientFactory = clientFactory;
         }
 
 
 
-        //private static readonly HttpClient _httpClient = new HttpClient();
 
-        public async Task<string> GetToken(string authCode)
+        public async Task<string> GetToken(AuthCode authCode)
         {
+            HttpClient client = new HttpClient();
+            var data = new StringContent("", Encoding.UTF8, "application/json");
 
-            //https://docs.microsoft.com/en-us/dotnet/csharp/tutorials/console-webapiclient
-            // uses HttpClient client = new HttpClient();
-            //var res = _httpClient.GetAsync("");
+            var queryParams = new Dictionary<string, string>() {
+                                                    {"grant_type", "authorization_code"},
+                                                    {"code", authCode.code},
+                                                    {"redirect_uri", authCode.redirect_uri},
+                                                    {"client_id", GetClientId()},
+                                                    {"client_secret", GetClientSecret()},
+                                                    {"state", authCode.state}
+                                                };
 
+            string uri = QueryHelpers.AddQueryString(_tokenEndpoint, queryParams);
+            
+            var response = await client.PostAsync(uri, data);
+            string result = response.Content.ReadAsStringAsync().Result;
 
+            return result;
+        }
 
-            //https://docs.microsoft.com/en-us/aspnet/core/fundamentals/http-requests?view=aspnetcore-3.1
-            var request = new HttpRequestMessage(HttpMethod.Get, "https://api.github.com/repos/aspnet/AspNetCore.Docs/branches");
-            request.Headers.Add("Accept", "application/vnd.github.v3+json");
-            request.Headers.Add("User-Agent", "HttpClientFactory-Sample");
+        private static string GetClientId()
+        {
+            return "884429750806-4lj7ea238v67c5681d707r3napu02q1e.apps.googleusercontent.com";
+        }
 
-            var client = _clientFactory.CreateClient();
-
-            var response = await client.SendAsync(request);
-
-            return "";
+        private static string GetClientSecret()
+        {
+            return "h23gSHfnBSv5QMXmbp4zdJch";
         }
     }
 }
