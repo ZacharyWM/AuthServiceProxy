@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using myAuthApp.Models;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace myAuthApp.Services
 {
@@ -15,13 +17,10 @@ namespace myAuthApp.Services
         {
         }
 
-
-
-
-        public async Task<string> GetToken(AuthCode authCode)
+        public async Task<AuthResponse> GetToken(AuthCode authCode)
         {
             HttpClient client = new HttpClient();
-            var data = new StringContent("", Encoding.UTF8, "application/json");
+            var data = new StringContent("", Encoding.UTF8, "application/x-www-form-urlencoded");
 
             var queryParams = new Dictionary<string, string>() {
                                                     {"grant_type", "authorization_code"},
@@ -29,24 +28,35 @@ namespace myAuthApp.Services
                                                     {"redirect_uri", authCode.redirect_uri},
                                                     {"client_id", GetClientId()},
                                                     {"client_secret", GetClientSecret()},
-                                                    {"state", authCode.state}
+                                                    {"include_granted_scopes", "true"} // optional
                                                 };
+            
 
             string uri = QueryHelpers.AddQueryString(_tokenEndpoint, queryParams);
-            
             var response = await client.PostAsync(uri, data);
-            string result = response.Content.ReadAsStringAsync().Result;
+            string jsonResult = response.Content.ReadAsStringAsync().Result;
 
-            return result;
+            AuthResponse authResponse = JsonConvert.DeserializeObject<AuthResponse>(jsonResult);
+
+            return authResponse;
+        }
+
+        public async Task<AuthResponse> RefreshToken(AuthCode authCode){
+
+            
+
+            return new AuthResponse();
         }
 
         private static string GetClientId()
         {
+            // TODO: store securely
             return "884429750806-4lj7ea238v67c5681d707r3napu02q1e.apps.googleusercontent.com";
         }
 
         private static string GetClientSecret()
         {
+            // TODO: store securely
             return "h23gSHfnBSv5QMXmbp4zdJch";
         }
     }

@@ -32,8 +32,8 @@ namespace myAuthApp.Controllers
             return new { currentAction = "Get" };
         }
 
-        [HttpPost("auth")]
-        public async System.Threading.Tasks.Task<object> GetAuthTokenAsync(AuthCode authCode)
+        [HttpPost("google")]
+        public async System.Threading.Tasks.Task<object> GetGoogleAuthTokenAsync(AuthCode authCode)
         {
             Guid userId = Guid.NewGuid();
 

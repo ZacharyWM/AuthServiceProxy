@@ -22,7 +22,7 @@ export const Authorizing = (props) => {
 
         console.log(payload)
 
-        axios.post("/login/auth", payload).then(response => console.log(response))
+        axios.post("/login/google", payload).then(response => console.log(response))
 
 
 

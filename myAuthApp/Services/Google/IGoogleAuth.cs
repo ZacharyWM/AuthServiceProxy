@@ -5,7 +5,10 @@ namespace myAuthApp.Services
 {
     public interface IGoogleAuth
     {
-        Task<string> GetToken(AuthCode authCode);
+        Task<AuthResponse> GetToken(AuthCode authCode);
+
+        Task<AuthResponse> RefreshToken(AuthCode authCode);
+
 
     }
 }
