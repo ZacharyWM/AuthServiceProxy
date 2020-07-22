@@ -39,7 +39,6 @@ namespace myAuthApp
 
             services.AddSingleton<ITokenService, TokenService>();
             services.AddSingleton<IGoogleAuth, GoogleAuth>();
-            services.AddHttpClient();
             
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

@@ -7,6 +7,8 @@ using System.Net.Http;
 
 namespace myAuthApp.Controllers
 {
+
+    // TODO maybe change to "AuthController"
     [ApiController]
     [Route("[controller]")]
     public class LoginController : ControllerBase
@@ -15,14 +17,12 @@ namespace myAuthApp.Controllers
         private readonly ILogger<LoginController> _logger;
         private readonly ITokenService _tokenService;
         private readonly IGoogleAuth _googleAuth;
-        private readonly IHttpClientFactory _clientFactory;
 
-        public LoginController(ILogger<LoginController> logger, ITokenService tokenService, IGoogleAuth googleAuth, IHttpClientFactory clientFactory)
+        public LoginController(ILogger<LoginController> logger, ITokenService tokenService, IGoogleAuth googleAuth)
         {
             _logger = logger;
             _tokenService = tokenService;
             _googleAuth = googleAuth;
-            _clientFactory = clientFactory;
         }
 
 
