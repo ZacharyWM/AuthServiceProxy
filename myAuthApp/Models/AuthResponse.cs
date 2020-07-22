@@ -1,10 +1,16 @@
 using System;
 using Newtonsoft.Json;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace myAuthApp.Models
 {
     public class AuthResponse
     {
+
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public Guid Id { get; set; }
 
         [JsonProperty("access_token")]
         public string AccessToken { get; set; }
