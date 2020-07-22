@@ -12,7 +12,9 @@ export const Login = (props) => {
   return (
     <div className="login-page">
       <div className="form">
-        { showLogin &&  
+      <GoogleButton onClick={() => window.location.href = googleEndpoints.auth} />
+
+        {/* { showLogin &&  
           <LoginForm  
             loginInfo={loginInfo} 
             setLoginInfo={setLoginInfo}
@@ -25,7 +27,7 @@ export const Login = (props) => {
             setSignUpInfo={setSignUpInfo}
             setShowLogin={setShowLogin }
             />       
-        }       
+        }        */}
       </div>
     </div>
   )

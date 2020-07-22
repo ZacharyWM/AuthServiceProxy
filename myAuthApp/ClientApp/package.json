@@ -16,7 +16,7 @@
     "react-scripts": "^3.4.1",
     "reactstrap": "^8.4.1",
     "rimraf": "^2.6.2",
-    "query-string":"6.13.1"
+    "query-string": "6.13.1"
   },
   "devDependencies": {
     "ajv": "^6.9.1",
