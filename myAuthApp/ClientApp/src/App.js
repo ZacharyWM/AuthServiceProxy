@@ -16,7 +16,7 @@ const App = (props) => {
       // TODO: figure out why it tries to go to /index.html on startup   
       history.push('/')
     }
-  })
+  },[window.location.pathname])
 
  
   console.log(history)

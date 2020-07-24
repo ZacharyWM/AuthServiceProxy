@@ -10,7 +10,7 @@ namespace myAuthApp.Models
 
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("access_token")]
         public string AccessToken { get; set; }

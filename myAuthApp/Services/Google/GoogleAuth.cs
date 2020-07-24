@@ -40,9 +40,10 @@ namespace myAuthApp.Services
             string jsonResult = response.Content.ReadAsStringAsync().Result;
 
             AuthResponse authResponse = JsonConvert.DeserializeObject<AuthResponse>(jsonResult);
-
+            
             return authResponse;
         }
+
 
         public async Task<AuthResponse> RefreshToken(AuthCode authCode){
 
