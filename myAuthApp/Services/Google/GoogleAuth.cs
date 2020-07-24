@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json;
+using System;
 
 namespace myAuthApp.Services
 {
@@ -13,8 +14,10 @@ namespace myAuthApp.Services
     {
         private const string _tokenEndpoint = "https://accounts.google.com/o/oauth2/token";
 
+
         public GoogleAuth()
         {
+
         }
 
         public async Task<AuthResponse> GetToken(AuthCode authCode)

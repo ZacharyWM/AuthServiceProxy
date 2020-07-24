@@ -38,12 +38,8 @@ namespace myAuthApp
             });
 
 
-            // TODO
-            // read more about IoC at
-            // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-3.1
-            // use services.AddScoped instead?
-            services.AddSingleton<ITokenService, TokenService>();
-            services.AddSingleton<IGoogleAuth, GoogleAuth>();
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IGoogleAuth, GoogleAuth>();
             
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

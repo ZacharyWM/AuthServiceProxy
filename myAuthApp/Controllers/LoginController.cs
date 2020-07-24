@@ -37,7 +37,7 @@ namespace myAuthApp.Controllers
             Guid userId = Guid.NewGuid();
 
             var authToken = await _googleAuth.GetToken(authCode);
-
+            
             //get auth token from google, save it, return JWT associated with auth token to allow app access
 
 

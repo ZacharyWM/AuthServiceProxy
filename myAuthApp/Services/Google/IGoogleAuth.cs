@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using myAuthApp.Models;
+using System;
 
 namespace myAuthApp.Services
 {
@@ -8,7 +9,6 @@ namespace myAuthApp.Services
         Task<AuthResponse> GetToken(AuthCode authCode);
 
         Task<AuthResponse> RefreshToken(AuthCode authCode);
-
 
     }
 }
