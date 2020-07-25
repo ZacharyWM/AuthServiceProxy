@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using myAuthApp.Services;
 using myAuthApp.Models;
+using myAuthApp.Store.UserStore;
 
 namespace myAuthApp.Controllers
 {
@@ -16,12 +17,14 @@ namespace myAuthApp.Controllers
         private readonly ILogger<LoginController> _logger;
         private readonly ITokenService _tokenService;
         private readonly IGoogleAuth _googleAuth;
+        private readonly IUserStore _userStore;
 
-        public LoginController(ILogger<LoginController> logger, ITokenService tokenService, IGoogleAuth googleAuth)
+        public LoginController(ILogger<LoginController> logger, ITokenService tokenService, IGoogleAuth googleAuth, IUserStore userStore)
         {
             _logger = logger;
             _tokenService = tokenService;
             _googleAuth = googleAuth;
+            _userStore = userStore;
         }
 
 
@@ -32,19 +35,18 @@ namespace myAuthApp.Controllers
         }
 
         [HttpPost("google")]
-        public async System.Threading.Tasks.Task<object> GetGoogleAuthTokenAsync(AuthCode authCode)
+        public async System.Threading.Tasks.Task<object> AuthWithGoogleAsync(AuthCode authCode)
         {
-            Guid userId = Guid.NewGuid();
+            var authResponse = await _googleAuth.GetToken(authCode);
 
-            var authToken = await _googleAuth.GetToken(authCode);
-            
-            //get auth token from google, save it, return JWT associated with auth token to allow app access
+            User user = _userStore.UpdateUserGoogleAuth(authResponse);
 
-
-
-       
-
-            return new { theCode = authCode.code, theScope = authCode.scope, theToken = _tokenService.GetToken(userId) };
+            // TODO: create some type of return object with everything needed.
+            return new {
+                userFirstName = user.FirstName,
+                userLastName = user.LastName,
+                token = _tokenService.GetToken(user.Id)
+            };
         }
     }
 

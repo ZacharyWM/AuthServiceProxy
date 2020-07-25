@@ -15,5 +15,13 @@ namespace myAuthApp.Models
 
         [BsonElement("lastName")]
         public string LastName { get; set; }
+
+        [BsonElement("emailAddress")]
+        public string EmailAddress { get; set; }
+        
+        [BsonElement("googleAuth")]
+        public AuthResponse GoogleAuth { get; set; }
+
+        // property to store ZachsAuthCenterToken
     }
 }

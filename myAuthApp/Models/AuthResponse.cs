@@ -8,9 +8,9 @@ namespace myAuthApp.Models
     public class AuthResponse
     {
 
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        // [BsonId]
+        // [BsonRepresentation(BsonType.ObjectId)]
+        // public string Id { get; set; }
 
         [JsonProperty("access_token")]
         public string AccessToken { get; set; }
@@ -29,5 +29,11 @@ namespace myAuthApp.Models
 
         [JsonProperty("token_type")]
         public string TokenType { get; set; }
+
+        public string EmailAddress { get; set; }
+
+        public int IssuedAtTime { get; set; }
+
+        public int ExpirationTime { get; set; }
     }
 }

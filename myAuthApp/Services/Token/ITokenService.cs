@@ -4,7 +4,7 @@ namespace myAuthApp.Services
 {
     public interface ITokenService
     {
-        string GetToken(Guid userId);
+        string GetToken(string userId);
 
         bool ValidateToken(string token);
 

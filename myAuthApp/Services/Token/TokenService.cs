@@ -14,7 +14,7 @@ namespace myAuthApp.Services
 
         private const string _tokenSecret =   "asdv234234^&%&^%&^hjsdfb2%%%";
 
-        public string GetToken(Guid userId){
+        public string GetToken(string userId){
 
             var mySecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_tokenSecret));
 
@@ -27,7 +27,7 @@ namespace myAuthApp.Services
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, "Zach"),
-                    new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+                    new Claim(ClaimTypes.NameIdentifier, userId),
                     new Claim(ClaimTypes.Role, "Admin"),
                     new Claim("IsCool", "True")
                 }),

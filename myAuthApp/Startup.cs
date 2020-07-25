@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using myAuthApp.Services;
+using myAuthApp.Store.UserStore;
 
 namespace myAuthApp
 {
@@ -40,6 +41,7 @@ namespace myAuthApp
 
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IGoogleAuth, GoogleAuth>();
+            services.AddScoped<IUserStore, LiveUserStore>();
             
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

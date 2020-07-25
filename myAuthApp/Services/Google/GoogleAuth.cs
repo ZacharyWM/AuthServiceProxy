@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using myAuthApp.Models;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
-using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace myAuthApp.Services
 {
@@ -33,24 +33,38 @@ namespace myAuthApp.Services
                                                     {"client_secret", GetClientSecret()},
                                                     {"include_granted_scopes", "true"} // optional
                                                 };
-            
+
 
             string uri = QueryHelpers.AddQueryString(_tokenEndpoint, queryParams);
             var response = await client.PostAsync(uri, data);
+            
             string jsonResult = response.Content.ReadAsStringAsync().Result;
 
-            AuthResponse authResponse = JsonConvert.DeserializeObject<AuthResponse>(jsonResult);
-            
-            return authResponse;
+            return ConvertResultToAuthResponse(jsonResult);
         }
 
+        public async Task<AuthResponse> RefreshToken(AuthCode authCode)
+        {
 
-        public async Task<AuthResponse> RefreshToken(AuthCode authCode){
 
-            
 
             return new AuthResponse();
         }
+
+        private AuthResponse ConvertResultToAuthResponse(string jsonResult)
+        {
+            AuthResponse authResponse = JsonConvert.DeserializeObject<AuthResponse>(jsonResult);
+
+            var handler = new JwtSecurityTokenHandler();
+            JwtSecurityToken token = handler.ReadJwtToken(authResponse.IdToken);
+
+            authResponse.EmailAddress = token.Payload.GetValueOrDefault("email").ToString();
+            authResponse.IssuedAtTime = Convert.ToInt32(token.Payload.GetValueOrDefault("iat"));
+            authResponse.ExpirationTime = Convert.ToInt32(token.Payload.GetValueOrDefault("exp"));
+
+            return authResponse;
+        }
+
 
         private static string GetClientId()
         {
