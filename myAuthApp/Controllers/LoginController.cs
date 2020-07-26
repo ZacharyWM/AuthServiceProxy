@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using myAuthApp.Services;
 using myAuthApp.Models;
 using myAuthApp.Store.UserStore;
+using System.Threading.Tasks;
 
 namespace myAuthApp.Controllers
 {
@@ -11,7 +12,7 @@ namespace myAuthApp.Controllers
     // TODO maybe change to "AuthController"
     [ApiController]
     [Route("[controller]")]
-    public class LoginController : ControllerBase
+    public class LoginController : CustomControllerBase
     {
 
         private readonly ILogger<LoginController> _logger;
@@ -35,18 +36,21 @@ namespace myAuthApp.Controllers
         }
 
         [HttpPost("google")]
-        public async System.Threading.Tasks.Task<object> AuthWithGoogleAsync(AuthCode authCode)
+        public async Task<IActionResult> AuthWithGoogleAsync(AuthCode authCode)
         {
             var authResponse = await _googleAuth.GetToken(authCode);
 
             User user = _userStore.UpdateUserGoogleAuth(authResponse);
 
+            return Ok(new {token = _tokenService.GetToken(user)});
+
             // TODO: create some type of return object with everything needed.
-            return new {
-                userFirstName = user.FirstName,
-                userLastName = user.LastName,
-                token = _tokenService.GetToken(user.Id)
-            };
+
+            // return new {
+            //     userFirstName = user.FirstName,
+            //     userLastName = user.LastName,
+            //     token = _tokenService.GetToken(user)
+            // };
         }
     }
 

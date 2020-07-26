@@ -1,10 +1,11 @@
 using System;
+using myAuthApp.Models;
 
 namespace myAuthApp.Services
 {
     public interface ITokenService
     {
-        string GetToken(string userId);
+        string GetToken(User user);
 
         bool ValidateToken(string token);
 

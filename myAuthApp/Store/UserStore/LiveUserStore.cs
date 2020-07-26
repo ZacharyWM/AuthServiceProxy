@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Security.Authentication;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using myAuthApp.Models;
 using myAuthApp.Services;
+using static myAuthApp.Enums.AllEnums;
 
 namespace myAuthApp.Store.UserStore
 {
@@ -42,13 +44,13 @@ namespace myAuthApp.Store.UserStore
             var findResult = userCollection.Find(x => x.EmailAddress == auth.EmailAddress);
             if (findResult.CountDocuments() == 0)
             {
-                return CreateNewUser(auth, userCollection);
+                return CreateNewGoogleAuthUser(auth, userCollection);
             }
 
-            return UpdateUser(auth, userCollection);
+            return UpdateGoogleAuthUser(auth, userCollection);
         }
 
-        private static User UpdateUser(AuthResponse auth, IMongoCollection<User> userCollection)
+        private static User UpdateGoogleAuthUser(AuthResponse auth, IMongoCollection<User> userCollection)
         {
             var filterBuilder = new FilterDefinitionBuilder<User>();
             var filter = filterBuilder.Where(x => x.EmailAddress == auth.EmailAddress);
@@ -62,12 +64,13 @@ namespace myAuthApp.Store.UserStore
             return updatedUser;
         }
 
-        private static User CreateNewUser(AuthResponse auth, IMongoCollection<User> userCollection)
+        private static User CreateNewGoogleAuthUser(AuthResponse auth, IMongoCollection<User> userCollection)
         {
 
             var newUser = new User();
             newUser.FirstName = "firstname"; // TODO: get user details from Google
             newUser.LastName = "lastname";
+            newUser.Roles = new List<string>() { RolesEnum.None.ToString() };
             newUser.EmailAddress = auth.EmailAddress;
             newUser.GoogleAuth = auth;
             userCollection.InsertOne(newUser);

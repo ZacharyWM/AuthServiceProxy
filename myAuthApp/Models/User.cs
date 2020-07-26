@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -18,6 +19,9 @@ namespace myAuthApp.Models
 
         [BsonElement("emailAddress")]
         public string EmailAddress { get; set; }
+
+        [BsonElement("roles")]
+        public List<string> Roles { get; set; }
         
         [BsonElement("googleAuth")]
         public AuthResponse GoogleAuth { get; set; }

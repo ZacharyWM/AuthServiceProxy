@@ -1,10 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-
+using myAuthApp.Models;
 
 namespace myAuthApp.Services
 {
@@ -12,26 +13,31 @@ namespace myAuthApp.Services
     {
         // https://dotnetcoretutorials.com/2020/01/15/creating-and-validating-jwt-tokens-in-asp-net-core/
 
-        private const string _tokenSecret =   "asdv234234^&%&^%&^hjsdfb2%%%";
+        private const string _tokenSecret = "asdv234234^&%&^%&^hjsdfb2%%%";
 
-        public string GetToken(string userId){
+        public string GetToken(User user)
+        {
 
             var mySecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_tokenSecret));
 
-            var myIssuer = "http://mysite.com";
-            var myAudience = "http://myaudience.com";
+            var myIssuer = "http://zach.com";
+            var myAudience = "http://zachsfriends.com";
+
+
+            var claims = new List<Claim>() {
+                                new Claim(ClaimTypes.Name, user.FirstName),
+                                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                                new Claim(ClaimTypes.Email, user.EmailAddress)
+            };
+            user.Roles.ForEach(role => {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            });
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, "Zach"),
-                    new Claim(ClaimTypes.NameIdentifier, userId),
-                    new Claim(ClaimTypes.Role, "Admin"),
-                    new Claim("IsCool", "True")
-                }),
-                Expires = DateTime.UtcNow.AddHours(4),
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddHours(1),
                 Issuer = myIssuer,
                 Audience = myAudience,
                 SigningCredentials = new SigningCredentials(mySecurityKey, SecurityAlgorithms.HmacSha256Signature)

@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,11 +37,10 @@ namespace myAuthApp
                                 });
             });
 
-
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IGoogleAuth, GoogleAuth>();
             services.AddScoped<IUserStore, LiveUserStore>();
-            
+
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
