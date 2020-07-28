@@ -5,6 +5,10 @@ using myAuthApp.Services;
 using myAuthApp.Models;
 using myAuthApp.Store.UserStore;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+using System.Linq;
+using static myAuthApp.Enums.AllEnums;
 
 namespace myAuthApp.Controllers
 {
@@ -16,14 +20,13 @@ namespace myAuthApp.Controllers
     {
 
         private readonly ILogger<LoginController> _logger;
-        private readonly ITokenService _tokenService;
         private readonly IGoogleAuth _googleAuth;
         private readonly IUserStore _userStore;
 
         public LoginController(ILogger<LoginController> logger, ITokenService tokenService, IGoogleAuth googleAuth, IUserStore userStore)
+            : base(tokenService)
         {
             _logger = logger;
-            _tokenService = tokenService;
             _googleAuth = googleAuth;
             _userStore = userStore;
         }
@@ -42,15 +45,39 @@ namespace myAuthApp.Controllers
 
             User user = _userStore.UpdateUserGoogleAuth(authResponse);
 
-            return Ok(new {token = _tokenService.GetToken(user)});
+            string jwt = _tokenService.GetToken(user);
 
-            // TODO: create some type of return object with everything needed.
+            AddAuthCookie(jwt);
 
-            // return new {
-            //     userFirstName = user.FirstName,
-            //     userLastName = user.LastName,
-            //     token = _tokenService.GetToken(user)
-            // };
+            if (!HasRole(RolesEnum.User))
+            {
+                return Unauthorized();
+            }
+
+
+            return Ok(new
+            {
+                firstName = user.FirstName,
+                lastName = user.LastName,
+                email = user.EmailAddress,
+                roles = user.Roles
+            });
+        }
+
+        private void AddAuthCookie(string jwt)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                Secure = true,
+                HttpOnly = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.Now.AddHours(1) //  should probably match token expiration (should also check tokens expiration on each request)
+            };
+
+            string authCookieName = "zachsauthcenter";
+
+            Response.Cookies.Delete(authCookieName);
+            Response.Cookies.Append(authCookieName, jwt, cookieOptions);
         }
     }
 

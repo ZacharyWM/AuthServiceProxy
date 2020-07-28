@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 using myAuthApp.Models;
 
 namespace myAuthApp.Services
@@ -9,7 +11,7 @@ namespace myAuthApp.Services
 
         bool ValidateToken(string token);
 
-        string GetClaim(string token, string claimType);
+        IEnumerable<Claim> GetAllClaims(string token);
         
     }
 }
