@@ -19,7 +19,6 @@ const App = (props) => {
   },[window.location.pathname])
 
  
-  console.log(history)
   return (
      <Layout>
       <Route exact path='/' component={Login} />

@@ -51,7 +51,7 @@ namespace myAuthApp.Controllers
 
             if (!HasRole(RolesEnum.User))
             {
-                return Unauthorized();
+                return Unauthorized("You don't have permission to use Zach's Auth Center.");
             }
 
 
@@ -70,8 +70,7 @@ namespace myAuthApp.Controllers
             {
                 Secure = true,
                 HttpOnly = true,
-                SameSite = SameSiteMode.Strict,
-                Expires = DateTime.Now.AddHours(1) //  should probably match token expiration (should also check tokens expiration on each request)
+                SameSite = SameSiteMode.Strict
             };
 
             string authCookieName = "zachsauthcenter";

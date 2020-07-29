@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {googleEndpoints} from '../auth/auth'
+import {googleEndpoints} from '../auth/Auth_Google'
 import GoogleButton from 'react-google-button'
 
 

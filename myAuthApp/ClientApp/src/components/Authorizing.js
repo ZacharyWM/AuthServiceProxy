@@ -1,9 +1,10 @@
 import React, { useState, useEffect, Fragment } from 'react';
+import { Route, useHistory } from 'react-router';
 import queryString from 'query-string'
 import axios from 'axios'
 
 export const Authorizing = (props) => {
-
+    const history = useHistory()
 
     useEffect(() => {
 
@@ -22,12 +23,22 @@ export const Authorizing = (props) => {
 
         console.log(payload)
 
-        axios.post("/login/google", payload).then(response => console.log(response))
+        axios.post("/login/google", payload)
+        .then(response => {
+            console.log(response)
+
+            history.push({
+                pathname: '/dashboard',
+                state: { user: response.data }
+              })
+        }).catch(error => {
+            console.log(error)
+        })
 
 
 
-        // send to server, get auth token, save to DB
 
+        
     }, []) // should only run once
 
 

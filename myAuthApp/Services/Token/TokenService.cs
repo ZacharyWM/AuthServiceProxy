@@ -50,7 +50,7 @@ namespace myAuthApp.Services
             var tokenHandler = new JwtSecurityTokenHandler();
             try
             {
-                tokenHandler.ValidateToken(token, new TokenValidationParameters
+                var validationParams = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
                     ValidateIssuer = true,
@@ -58,7 +58,9 @@ namespace myAuthApp.Services
                     ValidIssuer = _issuer,
                     ValidAudience = _audience,
                     IssuerSigningKey = mySecurityKey
-                }, out SecurityToken validatedToken);
+                };
+
+                tokenHandler.ValidateToken(token, validationParams, out SecurityToken validatedToken);
             }
             catch
             {
