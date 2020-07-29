@@ -1,6 +1,8 @@
 const client_id = "884429750806-4lj7ea238v67c5681d707r3napu02q1e.apps.googleusercontent.com"
 const redirect_uri_encoded = "https%3A%2F%2Flocalhost%3A5001%2Fauthorizing"
 
+// How to use the state param
+//https://auth0.com/docs/protocols/oauth2/mitigate-csrf-attacks
 const state = "I don't know what I want here right now"
 
 const googleScopes = [

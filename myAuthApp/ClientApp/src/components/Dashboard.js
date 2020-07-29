@@ -6,7 +6,7 @@ export const Dashboard = (props) => {
 
 
     return (
-        <div>You made it to the dashboard!</div>
+        <div>You made it to the dashboard, user.firstName!</div>
     )
 
 }

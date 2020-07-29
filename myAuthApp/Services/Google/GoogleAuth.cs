@@ -14,6 +14,8 @@ namespace myAuthApp.Services
     {
         private const string _tokenEndpoint = "https://accounts.google.com/o/oauth2/token";
 
+        // TODO Add PKCE
+        // https://auth0.com/docs/flows/guides/auth-code-pkce/call-api-auth-code-pkce
 
         public GoogleAuth()
         {
