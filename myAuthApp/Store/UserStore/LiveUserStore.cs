@@ -5,34 +5,27 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using myAuthApp.Models;
 using myAuthApp.Services;
+using Microsoft.Extensions.Configuration;
 using static myAuthApp.Enums.AllEnums;
 
 namespace myAuthApp.Store.UserStore
 {
     public class LiveUserStore : IUserStore
     {
-        private const string _connectionString = "mongodb://acloudgurucosmosdb:ZXJ6pGRF8Oy5HzHDI5MnCcdVBVfhaR5IQNOSoOta2BjrIo7Gwb49qnn6sttiXh7xClBNXJDAM3CeYyVXol3WzA==@acloudgurucosmosdb.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@acloudgurucosmosdb@";
 
-        public LiveUserStore()
+        private readonly IConfiguration _config;
+
+        private string ConnectionString => _config.GetConnectionString("MongoDBConnectionString");
+
+        public LiveUserStore(IConfiguration config)
         {
-
+            _config = config;
         }
-        // testing DI
-        // binaryintellect.net/articles/17ee0ba2-99bb-47f0-ab18-f4fc32f476f8.aspx
-        // IGoogleAuth _googleAuth;
-        // public LiveUserStore([FromServices] IGoogleAuth googleAuth)
-        // {
-        //     _googleAuth = googleAuth;
-        // }
-
-        //public IGoogleAuth GoogleAuth { get; set; }
-
 
         public User UpdateUserGoogleAuth(AuthResponse auth)
         {
-
             MongoClientSettings mongoSettings = MongoClientSettings.FromUrl(
-              new MongoUrl(_connectionString)
+              new MongoUrl(ConnectionString)
             );
             mongoSettings.SslSettings = new SslSettings() { EnabledSslProtocols = SslProtocols.Tls12 };
             var mongoClient = new MongoClient(mongoSettings);

@@ -1,13 +1,10 @@
-using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 using myAuthApp.Services;
 using myAuthApp.Models;
 using myAuthApp.Store.UserStore;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
-using System.Linq;
 using static myAuthApp.Enums.AllEnums;
 
 namespace myAuthApp.Controllers
@@ -18,13 +15,16 @@ namespace myAuthApp.Controllers
     [Route("[controller]")]
     public class LoginController : CustomControllerBase
     {
-
         private readonly ILogger<LoginController> _logger;
         private readonly IGoogleAuth _googleAuth;
         private readonly IUserStore _userStore;
 
-        public LoginController(ILogger<LoginController> logger, ITokenService tokenService, IGoogleAuth googleAuth, IUserStore userStore)
-            : base(tokenService)
+        public LoginController(ILogger<LoginController> logger,
+                               ITokenService tokenService,
+                               IGoogleAuth googleAuth,
+                               IUserStore userStore,
+                               IConfiguration config)
+            : base(tokenService, config)
         {
             _logger = logger;
             _googleAuth = googleAuth;
@@ -64,20 +64,6 @@ namespace myAuthApp.Controllers
             });
         }
 
-        private void AddAuthCookie(string jwt)
-        {
-            var cookieOptions = new CookieOptions
-            {
-                Secure = true,
-                HttpOnly = true,
-                SameSite = SameSiteMode.Strict
-            };
-
-            string authCookieName = "zachsauthcenter";
-
-            Response.Cookies.Delete(authCookieName);
-            Response.Cookies.Append(authCookieName, jwt, cookieOptions);
-        }
     }
 
 

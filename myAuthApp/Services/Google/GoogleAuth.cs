@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using myAuthApp.Models;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Configuration;
 using System.Text;
 using Newtonsoft.Json;
 using System;
@@ -12,14 +13,21 @@ namespace myAuthApp.Services
 {
     public class GoogleAuth : IGoogleAuth
     {
-        private const string _tokenEndpoint = "https://accounts.google.com/o/oauth2/token";
+
+        private readonly IConfiguration _config;
+
+        public string TokenEndpoint => _config.GetValue<string>("GoogleTokenEndpoint");
+        public string ClientId => _config.GetValue<string>("GoogleClientId");
+        public string ClientSecret => _config.GetValue<string>("GoogleClientSecret");
+
+
 
         // TODO Add PKCE
         // https://auth0.com/docs/flows/guides/auth-code-pkce/call-api-auth-code-pkce
 
-        public GoogleAuth()
+        public GoogleAuth(IConfiguration config)
         {
-
+            _config = config;
         }
 
         public async Task<AuthResponse> GetToken(AuthCode authCode)
@@ -31,16 +39,16 @@ namespace myAuthApp.Services
                                                     {"grant_type", "authorization_code"},
                                                     {"code", authCode.code},
                                                     {"redirect_uri", authCode.redirect_uri},
-                                                    {"client_id", GetClientId()},
-                                                    {"client_secret", GetClientSecret()},
+                                                    {"client_id", ClientId},
+                                                    {"client_secret", ClientSecret},
                                                     {"include_granted_scopes", "true"} // optional
                                                 };
 
 
-            string uri = QueryHelpers.AddQueryString(_tokenEndpoint, queryParams);
+            string uri = QueryHelpers.AddQueryString(TokenEndpoint, queryParams);
             var response = await client.PostAsync(uri, data);
             
-            string jsonResult = response.Content.ReadAsStringAsync().Result;
+            string jsonResult = await response.Content.ReadAsStringAsync();
 
             return ConvertResultToAuthResponse(jsonResult);
         }
@@ -59,7 +67,7 @@ namespace myAuthApp.Services
 
             var handler = new JwtSecurityTokenHandler();
             JwtSecurityToken token = handler.ReadJwtToken(authResponse.IdToken);
-
+            
             authResponse.EmailAddress = token.Payload.GetValueOrDefault("email").ToString();
             authResponse.IssuedAtTime = Convert.ToInt32(token.Payload.GetValueOrDefault("iat"));
             authResponse.ExpirationTime = Convert.ToInt32(token.Payload.GetValueOrDefault("exp"));
@@ -67,17 +75,5 @@ namespace myAuthApp.Services
             return authResponse;
         }
 
-
-        private static string GetClientId()
-        {
-            // TODO: store securely
-            return "884429750806-4lj7ea238v67c5681d707r3napu02q1e.apps.googleusercontent.com";
-        }
-
-        private static string GetClientSecret()
-        {
-            // TODO: store securely
-            return "h23gSHfnBSv5QMXmbp4zdJch";
-        }
     }
 }

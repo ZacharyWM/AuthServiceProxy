@@ -6,21 +6,25 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using myAuthApp.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace myAuthApp.Services
 {
     public class TokenService : ITokenService
     {
-        // https://dotnetcoretutorials.com/2020/01/15/creating-and-validating-jwt-tokens-in-asp-net-core/
+        private readonly IConfiguration _config;
+        private string TokenSecret => _config.GetValue<string>("TokenPrivateKey");
+        private string TokenAudience => _config.GetValue<string>("TokenAudience");
+        private string TokenIssuer => _config.GetValue<string>("TokenIssuer");
 
-        private readonly string _tokenSecret = "asdv234234^&%&^%&^hjsdfb2%%%";
-        private readonly string _issuer = "https://zach.com";
-        private readonly string _audience = "https://zachsfriends.com";
+        public TokenService(IConfiguration config)
+        {
+            _config = config;
+        }
 
         public string GetToken(User user)
         {
-
-            var mySecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_tokenSecret));
+            var mySecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(TokenSecret));
 
             var claims = new List<Claim>() {
                                 new Claim(ClaimTypes.Name, user.FirstName),
@@ -34,11 +38,11 @@ namespace myAuthApp.Services
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddHours(1),
-                Issuer = _issuer,
-                Audience = _audience,
+                Issuer = TokenIssuer,
+                Audience = TokenAudience,
                 SigningCredentials = new SigningCredentials(mySecurityKey, SecurityAlgorithms.HmacSha256Signature)
             };
-
+            
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             return tokenHandler.WriteToken(token);
@@ -46,7 +50,7 @@ namespace myAuthApp.Services
 
         public bool ValidateToken(string token)
         {
-            var mySecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_tokenSecret));
+            var mySecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(TokenSecret));
             var tokenHandler = new JwtSecurityTokenHandler();
             try
             {
@@ -55,18 +59,19 @@ namespace myAuthApp.Services
                     ValidateIssuerSigningKey = true,
                     ValidateIssuer = true,
                     ValidateAudience = true,
-                    ValidIssuer = _issuer,
-                    ValidAudience = _audience,
+                    ValidIssuer = TokenIssuer,
+                    ValidAudience = TokenAudience,
                     IssuerSigningKey = mySecurityKey
                 };
 
                 tokenHandler.ValidateToken(token, validationParams, out SecurityToken validatedToken);
+
+                return validatedToken != null;
             }
             catch
             {
                 return false;
             }
-            return true;
         }
 
 
