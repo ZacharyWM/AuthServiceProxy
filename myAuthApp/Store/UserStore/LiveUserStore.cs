@@ -14,12 +14,14 @@ namespace myAuthApp.Store.UserStore
     {
 
         private readonly IConfiguration _config;
+        private readonly IGoogleAuth _googleAuth;
 
         private string ConnectionString => _config.GetConnectionString("MongoDBConnectionString");
 
-        public LiveUserStore(IConfiguration config)
+        public LiveUserStore(IConfiguration config, IGoogleAuth googleAuth)
         {
             _config = config;
+            _googleAuth = googleAuth;
         }
 
         public User UpdateUserGoogleAuth(AuthResponse auth)
@@ -43,8 +45,11 @@ namespace myAuthApp.Store.UserStore
             return UpdateGoogleAuthUser(auth, userCollection);
         }
 
-        private static User UpdateGoogleAuthUser(AuthResponse auth, IMongoCollection<User> userCollection)
+        private User UpdateGoogleAuthUser(AuthResponse auth, IMongoCollection<User> userCollection)
         {
+
+            UserInfo_Google userinfo =  _googleAuth.GetUserInfo(auth.AccessToken).Result;
+            // TODO update user info
             var filterBuilder = new FilterDefinitionBuilder<User>();
             var filter = filterBuilder.Where(x => x.EmailAddress == auth.EmailAddress);
 
@@ -57,14 +62,16 @@ namespace myAuthApp.Store.UserStore
             return updatedUser;
         }
 
-        private static User CreateNewGoogleAuthUser(AuthResponse auth, IMongoCollection<User> userCollection)
+        private User CreateNewGoogleAuthUser(AuthResponse auth, IMongoCollection<User> userCollection)
         {
 
+            UserInfo_Google userinfo =  _googleAuth.GetUserInfo(auth.AccessToken).Result;
+
             var newUser = new User();
-            newUser.FirstName = "firstname"; // TODO: get user details from Google
-            newUser.LastName = "lastname";
+            newUser.FirstName = userinfo.FirstName;
+            newUser.LastName = userinfo.LastName;
             newUser.Roles = new List<string>() { RolesEnum.None.ToString() };
-            newUser.EmailAddress = auth.EmailAddress;
+            newUser.EmailAddress = userinfo.Email;
             newUser.GoogleAuth = auth;
             userCollection.InsertOne(newUser);
 

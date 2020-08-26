@@ -24,6 +24,8 @@ namespace myAuthApp
         {
 
             services.AddControllersWithViews();
+            services.AddHttpClient();
+
             services.AddCors(options =>
             {
                 options.AddPolicy(name: MyAllowSpecificOrigins,

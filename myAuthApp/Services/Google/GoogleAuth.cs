@@ -15,6 +15,7 @@ namespace myAuthApp.Services
     {
 
         private readonly IConfiguration _config;
+        private readonly IHttpClientFactory _clientFactory;
 
         public string TokenEndpoint => _config.GetValue<string>("GoogleTokenEndpoint");
         public string ClientId => _config.GetValue<string>("GoogleClientId");
@@ -25,16 +26,14 @@ namespace myAuthApp.Services
         // TODO Add PKCE
         // https://auth0.com/docs/flows/guides/auth-code-pkce/call-api-auth-code-pkce
 
-        public GoogleAuth(IConfiguration config)
+        public GoogleAuth(IConfiguration config, IHttpClientFactory clientFactory)
         {
             _config = config;
+            _clientFactory = clientFactory;
         }
 
         public async Task<AuthResponse> GetToken(AuthCode authCode)
         {
-            HttpClient client = new HttpClient();
-            var data = new StringContent("", Encoding.UTF8, "application/x-www-form-urlencoded");
-
             var queryParams = new Dictionary<string, string>() {
                                                     {"grant_type", "authorization_code"},
                                                     {"code", authCode.code},
@@ -44,13 +43,32 @@ namespace myAuthApp.Services
                                                     {"include_granted_scopes", "true"} // optional
                                                 };
 
-
+            var client = _clientFactory.CreateClient();
             string uri = QueryHelpers.AddQueryString(TokenEndpoint, queryParams);
-            var response = await client.PostAsync(uri, data);
+
+            var request = new HttpRequestMessage(HttpMethod.Post,uri);
+            request.Content = new StringContent("", Encoding.UTF8, "application/x-www-form-urlencoded");
+
+            var response = await client.SendAsync(request);
             
             string jsonResult = await response.Content.ReadAsStringAsync();
 
             return ConvertResultToAuthResponse(jsonResult);
+        }
+
+        public async Task<UserInfo_Google> GetUserInfo(string accessToken){
+
+            var client = _clientFactory.CreateClient();
+            var request = new HttpRequestMessage(HttpMethod.Get,"https://www.googleapis.com/oauth2/v2/userinfo");
+            request.Headers.Add("Authorization", $"Bearer {accessToken}");
+
+
+            var response = await client.SendAsync(request);
+            string jsonResult = await response.Content.ReadAsStringAsync();
+
+            UserInfo_Google userInfo = JsonConvert.DeserializeObject<UserInfo_Google>(jsonResult);
+
+            return userInfo;
         }
 
         public async Task<AuthResponse> RefreshToken(AuthCode authCode)
@@ -74,6 +92,8 @@ namespace myAuthApp.Services
 
             return authResponse;
         }
+
+
 
     }
 }

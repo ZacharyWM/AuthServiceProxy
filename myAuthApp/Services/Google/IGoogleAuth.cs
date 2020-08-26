@@ -10,5 +10,7 @@ namespace myAuthApp.Services
 
         Task<AuthResponse> RefreshToken(AuthCode authCode);
 
+        Task<UserInfo_Google> GetUserInfo(string accessToken);
+
     }
 }
