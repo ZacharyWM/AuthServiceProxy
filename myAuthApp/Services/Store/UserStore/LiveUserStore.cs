@@ -14,16 +14,12 @@ namespace myAuthApp.Store.UserStore
     public class LiveUserStore : IUserStore
     {
         private readonly IGoogleAPIs _googleAPIs;
-        private readonly IMongoDB _mongoDB;
         private readonly IMongoCollection<User> _collection;
 
         public LiveUserStore(IGoogleAPIs googleAPIs, IMongoDB mongoDB)
         {
             _googleAPIs = googleAPIs;
-            _mongoDB = mongoDB;
-            _collection = _mongoDB.GetClient()
-                                  .GetDatabase("userdb")
-                                  .GetCollection<User>("user");
+            _collection = mongoDB.GetUserCollection();
         }
 
         public User UpsertUserFromGoogleAuth(AuthResponse auth)
