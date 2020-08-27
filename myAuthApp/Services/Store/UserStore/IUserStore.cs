@@ -4,7 +4,7 @@ namespace myAuthApp.Store.UserStore
 {
     public interface IUserStore
     {
-         User UpdateUserGoogleAuth(AuthResponse auth);
+         User UpsertUserFromGoogleAuth(AuthResponse auth);
 
     }
 }

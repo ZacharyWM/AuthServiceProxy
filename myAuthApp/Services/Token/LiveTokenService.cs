@@ -10,14 +10,14 @@ using Microsoft.Extensions.Configuration;
 
 namespace myAuthApp.Services
 {
-    public class TokenService : ITokenService
+    public class LiveTokenService : ITokenService
     {
         private readonly IConfiguration _config;
         private string TokenSecret => _config.GetValue<string>("TokenPrivateKey");
         private string TokenAudience => _config.GetValue<string>("TokenAudience");
         private string TokenIssuer => _config.GetValue<string>("TokenIssuer");
 
-        public TokenService(IConfiguration config)
+        public LiveTokenService(IConfiguration config)
         {
             _config = config;
         }
@@ -73,8 +73,6 @@ namespace myAuthApp.Services
                 return false;
             }
         }
-
-
 
         public IEnumerable<Claim> GetAllClaims(string token)
         {

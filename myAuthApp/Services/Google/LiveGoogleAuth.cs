@@ -11,7 +11,7 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace myAuthApp.Services
 {
-    public class GoogleAuth : IGoogleAuth
+    public class LiveGoogleAuth : IGoogleAuth
     {
 
         private readonly IConfiguration _config;
@@ -26,7 +26,7 @@ namespace myAuthApp.Services
         // TODO Add PKCE
         // https://auth0.com/docs/flows/guides/auth-code-pkce/call-api-auth-code-pkce
 
-        public GoogleAuth(IConfiguration config, IHttpClientFactory clientFactory)
+        public LiveGoogleAuth(IConfiguration config, IHttpClientFactory clientFactory)
         {
             _config = config;
             _clientFactory = clientFactory;
@@ -54,21 +54,6 @@ namespace myAuthApp.Services
             string jsonResult = await response.Content.ReadAsStringAsync();
 
             return ConvertResultToAuthResponse(jsonResult);
-        }
-
-        public async Task<UserInfo_Google> GetUserInfo(string accessToken){
-
-            var client = _clientFactory.CreateClient();
-            var request = new HttpRequestMessage(HttpMethod.Get,"https://www.googleapis.com/oauth2/v2/userinfo");
-            request.Headers.Add("Authorization", $"Bearer {accessToken}");
-
-
-            var response = await client.SendAsync(request);
-            string jsonResult = await response.Content.ReadAsStringAsync();
-
-            UserInfo_Google userInfo = JsonConvert.DeserializeObject<UserInfo_Google>(jsonResult);
-
-            return userInfo;
         }
 
         public async Task<AuthResponse> RefreshToken(AuthCode authCode)

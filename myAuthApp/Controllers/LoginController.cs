@@ -43,7 +43,7 @@ namespace myAuthApp.Controllers
         {
             var authResponse = await _googleAuth.GetToken(authCode);
 
-            User user = _userStore.UpdateUserGoogleAuth(authResponse);
+            User user = _userStore.UpsertUserFromGoogleAuth(authResponse);
 
             string jwt = _tokenService.GetToken(user);
 

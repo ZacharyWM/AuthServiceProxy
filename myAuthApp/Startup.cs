@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using myAuthApp.Services;
+using myAuthApp.Services.MongoDB;
 using myAuthApp.Store.UserStore;
 
 namespace myAuthApp
@@ -39,9 +40,11 @@ namespace myAuthApp
                                 });
             });
 
-            services.AddScoped<ITokenService, TokenService>();
-            services.AddScoped<IGoogleAuth, GoogleAuth>();
+            services.AddScoped<ITokenService, LiveTokenService>();
+            services.AddScoped<IGoogleAuth, LiveGoogleAuth>();
+            services.AddScoped<IGoogleAPIs, LiveGoogleAPIs>();
             services.AddScoped<IUserStore, LiveUserStore>();
+            services.AddScoped<IMongoDB, LiveMongoDB>();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
