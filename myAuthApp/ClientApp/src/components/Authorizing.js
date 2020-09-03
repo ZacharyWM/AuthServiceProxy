@@ -6,6 +6,8 @@ import axios from 'axios'
 export const Authorizing = (props) => {
     const history = useHistory()
 
+    console.log(props.context)
+
     useEffect(() => {
 
         const { code, scope } = queryString.parse(props.location.search)
@@ -20,8 +22,6 @@ export const Authorizing = (props) => {
             "state": props.location.pathname,
             "redirect_uri": "https://localhost:5001/authorizing"
         }
-
-        console.log(payload)
 
         axios.post("/login/google", payload)
         .then(response => {
