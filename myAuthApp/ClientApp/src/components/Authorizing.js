@@ -2,11 +2,11 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { Route, useHistory } from 'react-router';
 import queryString from 'query-string'
 import axios from 'axios'
+import config from './../config/appConfigService'
 
 export const Authorizing = (props) => {
     const history = useHistory()
 
-    console.log(props.context)
 
     useEffect(() => {
 
@@ -20,7 +20,7 @@ export const Authorizing = (props) => {
             "code": code,
             "scope": scope,
             "state": props.location.pathname,
-            "redirect_uri": "https://localhost:5001/authorizing"
+            "redirect_uri": config.redirectUri
         }
 
         axios.post("/login/google", payload)

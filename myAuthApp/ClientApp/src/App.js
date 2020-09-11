@@ -19,6 +19,9 @@ const AuthContext = React.createContext(defaultAuthContextValue)
 const App = (props) => {
   const history = useHistory()
 
+  console.log('process.env')
+  console.log(process.env)
+
   useEffect(() => {
     if(window.location.pathname == "/index.html"){    
       // TODO: figure out why it tries to go to /index.html on startup   
