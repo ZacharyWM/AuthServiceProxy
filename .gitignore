@@ -403,3 +403,6 @@ ASALocalRun/
 
 # Local History for Visual Studio
 .localhistory/
+myAuthApp/ClientApp/src/config/appConfig_dev.json
+myAuthApp/ClientApp/src/config/appConfig.json
+myAuthApp/appsettings.json

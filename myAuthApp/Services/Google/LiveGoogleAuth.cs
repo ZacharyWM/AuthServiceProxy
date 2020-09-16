@@ -13,7 +13,6 @@ namespace myAuthApp.Services
 {
     public class LiveGoogleAuth : IGoogleAuth
     {
-
         private readonly IConfiguration _config;
         private readonly IHttpClientFactory _clientFactory;
 
@@ -23,7 +22,7 @@ namespace myAuthApp.Services
 
 
 
-        // TODO Add PKCE
+        // TODO Add PKCE?
         // https://auth0.com/docs/flows/guides/auth-code-pkce/call-api-auth-code-pkce
 
         public LiveGoogleAuth(IConfiguration config, IHttpClientFactory clientFactory)

@@ -31,7 +31,6 @@ namespace myAuthApp.Services
             var request = new HttpRequestMessage(HttpMethod.Get,"https://www.googleapis.com/oauth2/v2/userinfo");
             request.Headers.Add("Authorization", $"Bearer {accessToken}");
 
-
             var response = await client.SendAsync(request);
             string jsonResult = await response.Content.ReadAsStringAsync();
 

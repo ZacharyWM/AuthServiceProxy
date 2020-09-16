@@ -1,5 +1,5 @@
-import React, { useState, useEffect, Fragment } from 'react';
-import { Route, useHistory } from 'react-router';
+import React, { useEffect } from 'react';
+import { useHistory } from 'react-router';
 import queryString from 'query-string'
 import axios from 'axios'
 import config from './../config/appConfigService'
@@ -7,14 +7,9 @@ import config from './../config/appConfigService'
 export const Authorizing = (props) => {
     const history = useHistory()
 
-
     useEffect(() => {
 
         const { code, scope } = queryString.parse(props.location.search)
-       // console.log(queryString.parse(props.location.search))
-
-        // let state = { "state": props.location }
-        // let redirect_uri = { "redirect_uri": "https://localhost:5001/dashboard" }
 
         const payload = {
             "code": code,
@@ -24,21 +19,17 @@ export const Authorizing = (props) => {
         }
 
         axios.post("/login/google", payload)
-        .then(response => {
-            console.log(response)
+             .then(response => {
+                 console.log(response)
 
-            history.push({
-                pathname: '/dashboard',
-                state: { user: response.data }
-              })
-        }).catch(error => {
-            console.log(error)
-        })
-
-
-
-
-        
+                 history.push({
+                     pathname: '/dashboard',
+                     state: { user: response.data }
+                 })
+             }).catch(error => {
+                console.log(error)
+             })
+       
     }, []) // should only run once
 
 

@@ -4,7 +4,8 @@ import prodAppConfig from './appConfig.json'
 let envConfig = process.env == "development" ? devAppConfig : prodAppConfig
 
 const config = {
-    redirectUri: envConfig["redirect_uri"]
+    redirectUri: envConfig["redirect_uri"],
+    googleAuthClientId: envConfig["google_auth_client_id"]
 }
 
 export default config
