@@ -11,7 +11,7 @@ const googleScopes = [
 ]
 
 const authParamters = [
-    `redirect_uri=${encodeURI(`${window.location.origin}${config.redirectUri}`)}`,
+    `redirect_uri=${encodeURI(config.redirectUri)}`,
     "response_type=code",
     `client_id=${config.googleAuthClientId}`,
     `scope=${encodeURI(googleScopes.join(' '))}`,

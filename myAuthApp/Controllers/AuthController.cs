@@ -13,13 +13,13 @@ namespace myAuthApp.Controllers
     // TODO maybe change to "AuthController"
     [ApiController]
     [Route("[controller]")]
-    public class LoginController : CustomControllerBase
+    public class AuthController : CustomControllerBase
     {
-        private readonly ILogger<LoginController> _logger;
+        private readonly ILogger<AuthController> _logger;
         private readonly IGoogleAuth _googleAuth;
         private readonly IUserStore _userStore;
 
-        public LoginController(ILogger<LoginController> logger,
+        public AuthController(ILogger<AuthController> logger,
                                ITokenService tokenService,
                                IGoogleAuth googleAuth,
                                IUserStore userStore,
@@ -54,13 +54,13 @@ namespace myAuthApp.Controllers
                 return Unauthorized("You don't have permission to use Zach's Auth Center.");
             }
 
-
             return Ok(new
             {
                 firstName = user.FirstName,
                 lastName = user.LastName,
                 email = user.EmailAddress,
-                roles = user.Roles
+                roles = user.Roles,
+                redirect_uri = "https://www.hcss.com/"
             });
         }
 

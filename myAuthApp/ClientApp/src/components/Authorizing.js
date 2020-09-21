@@ -18,14 +18,22 @@ export const Authorizing = (props) => {
             "redirect_uri": config.redirectUri
         }
 
-        axios.post("/login/google", payload)
+        axios.post("/auth/google", payload)
              .then(response => {
                  console.log(response)
 
-                 history.push({
-                     pathname: '/dashboard',
-                     state: { user: response.data }
-                 })
+                 const redirect_uri = response.data.redirect_uri
+
+                 if (redirect_uri && redirect_uri.length > 0){
+                    window.location = redirect_uri + "?auth_code=knwunwcao3nd"
+                 }
+                 else {
+                    history.push({
+                        pathname: '/dashboard',
+                        state: { user: response.data }
+                    })
+                 }
+
              }).catch(error => {
                 console.log(error)
              })
