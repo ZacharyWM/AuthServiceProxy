@@ -8,6 +8,7 @@ using myAuthApp.Services;
 using Microsoft.Extensions.Configuration;
 using static myAuthApp.Enums.AllEnums;
 using myAuthApp.Services.MongoDB;
+using myAuthApp.Utility;
 
 namespace myAuthApp.Store.UserStore
 {
@@ -36,18 +37,21 @@ namespace myAuthApp.Store.UserStore
         private User UpdateGoogleAuthUser(AuthResponse auth)
         {
             UserInfo_Google userInfo =  _googleAPIs.GetUserInfo(auth.AccessToken).Result;
-
+            string newAuthCode = AuthCodeUtility.GenerateAuthCode();
             var filterBuilder = new FilterDefinitionBuilder<User>();
             var filter = filterBuilder.Where(x => x.EmailAddress == auth.EmailAddress);
+
 
             var updateDefinitionBuilder = new UpdateDefinitionBuilder<User>();
             var updateDefinition = updateDefinitionBuilder
                                                     .Set(x => x.GoogleAuth, auth)
                                                     .Set(x => x.FirstName, userInfo.FirstName)
-                                                    .Set(x => x.LastName, userInfo.LastName);
+                                                    .Set(x => x.LastName, userInfo.LastName)
+                                                    .Set(x => x.AuthCode, newAuthCode);
 
             var updatedUser = _collection.FindOneAndUpdate(filter, updateDefinition);
             updatedUser.GoogleAuth = auth;
+            updatedUser.AuthCode = newAuthCode;
 
             return updatedUser;
         }

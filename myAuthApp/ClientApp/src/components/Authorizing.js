@@ -25,7 +25,7 @@ export const Authorizing = (props) => {
                  const redirect_uri = response.data.redirect_uri
 
                  if (redirect_uri && redirect_uri.length > 0){
-                    window.location = redirect_uri + "?auth_code=knwunwcao3nd"
+                    window.location = redirect_uri
                  }
                  else {
                     history.push({

@@ -4,10 +4,10 @@ import config from './../config/appConfigService'
 const state = "I don't know what I want here right now"
 
 const googleScopes = [
-    'openid', 
+   'openid', 
     'email',
-    'https://www.googleapis.com/auth/contacts.readonly',
-    "https://www.googleapis.com/auth/userinfo.profile"
+  // 'https://www.googleapis.com/auth/contacts.readonly',
+     "https://www.googleapis.com/auth/userinfo.profile"
 ]
 
 const authParamters = [

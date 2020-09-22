@@ -6,6 +6,7 @@ using myAuthApp.Models;
 using myAuthApp.Store.UserStore;
 using System.Threading.Tasks;
 using static myAuthApp.Enums.AllEnums;
+using System;
 
 namespace myAuthApp.Controllers
 {
@@ -41,27 +42,36 @@ namespace myAuthApp.Controllers
         [HttpPost("google")]
         public async Task<IActionResult> AuthWithGoogleAsync(AuthCode authCode)
         {
-            var authResponse = await _googleAuth.GetToken(authCode);
+            try{
 
-            User user = _userStore.UpsertUserFromGoogleAuth(authResponse);
+                // TODO: Write Token controller that accepts auth code and returns access token
 
-            string jwt = _tokenService.GetToken(user);
+                var authResponse = await _googleAuth.GetToken(authCode);
 
-            AddAuthCookie(jwt);
+                User user = _userStore.UpsertUserFromGoogleAuth(authResponse);
 
-            if (!HasRole(RolesEnum.User))
-            {
-                return Unauthorized("You don't have permission to use Zach's Auth Center.");
+                // string jwt = _tokenService.GetToken(user);
+
+                // AddAuthCookie(jwt);
+
+                // if (!HasRole(RolesEnum.User))
+                // {
+                //     return Unauthorized("You don't have permission to use Zach's Auth Center.");
+                // }
+
+                return Ok(new
+                {
+                    firstName = user.FirstName,
+                    lastName = user.LastName,
+                    email = user.EmailAddress,
+                    roles = user.Roles,
+                    redirect_uri = $"https://www.hcss.com?auth_code={user.AuthCode}"
+                });
+            }
+            catch(Exception ex){
+                return Unauthorized();
             }
 
-            return Ok(new
-            {
-                firstName = user.FirstName,
-                lastName = user.LastName,
-                email = user.EmailAddress,
-                roles = user.Roles,
-                redirect_uri = "https://www.hcss.com/"
-            });
         }
 
     }

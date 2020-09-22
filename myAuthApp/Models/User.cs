@@ -20,6 +20,12 @@ namespace myAuthApp.Models
         [BsonElement("emailAddress")]
         public string EmailAddress { get; set; }
 
+        [BsonElement("authCode")]
+        public string AuthCode { get; set; }
+    
+        [BsonElement("accessToken")]
+        public string AccessToken { get; set; }
+
         [BsonElement("roles")]
         public List<string> Roles { get; set; }
         
