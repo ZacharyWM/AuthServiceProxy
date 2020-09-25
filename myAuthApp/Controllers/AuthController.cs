@@ -11,7 +11,6 @@ using System;
 namespace myAuthApp.Controllers
 {
 
-    // TODO maybe change to "AuthController"
     [ApiController]
     [Route("[controller]")]
     public class AuthController : CustomControllerBase
@@ -32,46 +31,26 @@ namespace myAuthApp.Controllers
             _userStore = userStore;
         }
 
-
-        [HttpGet] // default route
-        public object Get()
-        {
-            return new { currentAction = "Get" };
-        }
-
         [HttpPost("google")]
         public async Task<IActionResult> AuthWithGoogleAsync(AuthCode authCode)
         {
-            try{
-                // TODO: Write Token controller that accepts auth code and returns access token
+            AuthResponse authResponse = await _googleAuth.GetToken(authCode);
+            User user = _userStore.UpsertUserFromGoogleAuth(authResponse);
 
-                var authResponse = await _googleAuth.GetToken(authCode);
+            string clientRedirectUri = String.IsNullOrWhiteSpace(authCode.ClientRedirectUri) ? null : $"{authCode.ClientRedirectUri}?auth_code={user.AuthCode}";
 
-                User user = _userStore.UpsertUserFromGoogleAuth(authResponse);
-
-                // string jwt = _tokenService.GetToken(user);
-
-                // AddAuthCookie(jwt);
-
-                // if (!HasRole(RolesEnum.User))
-                // {
-                //     return Unauthorized("You don't have permission to use Zach's Auth Center.");
-                // }
-
-                return Ok(new
-                {
-                    firstName = user.FirstName,
-                    lastName = user.LastName,
-                    email = user.EmailAddress,
-                    roles = user.Roles,
-                    client_redirect_uri = $"{authCode.ClientRedirectUri}?auth_code={user.AuthCode}"
-                });
-            }
-            catch(Exception ex){
-                return Unauthorized();
-            }
-
+            return Ok(new
+            {
+                firstName = user.FirstName,
+                lastName = user.LastName,
+                email = user.EmailAddress,
+                roles = user.Roles,
+                client_redirect_uri = clientRedirectUri
+            });
         }
+
+
+        
 
     }
 
