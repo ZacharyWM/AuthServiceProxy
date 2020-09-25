@@ -22,7 +22,7 @@ namespace myAuthApp.Services
 
 
 
-        // TODO Add PKCE?
+        // TODO PKCE functionality?
         // https://auth0.com/docs/flows/guides/auth-code-pkce/call-api-auth-code-pkce
 
         public LiveGoogleAuth(IConfiguration config, IHttpClientFactory clientFactory)
@@ -35,8 +35,8 @@ namespace myAuthApp.Services
         {
             var queryParams = new Dictionary<string, string>() {
                                                     {"grant_type", "authorization_code"},
-                                                    {"code", authCode.code},
-                                                    {"redirect_uri", authCode.redirect_uri},
+                                                    {"code", authCode.Code},
+                                                    {"redirect_uri", authCode.RedirectUri},
                                                     {"client_id", ClientId},
                                                     {"client_secret", ClientSecret},
                                                     {"include_granted_scopes", "true"} // optional

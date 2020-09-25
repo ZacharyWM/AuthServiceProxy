@@ -3,17 +3,19 @@ namespace myAuthApp.Models
     public class AuthCode
     {
         public AuthCode() { }
-        public AuthCode(string code, string scope, string state, string redirect_uri)
+        public AuthCode(string code, string scope, string state, string redirect_uri, string client_redirect_uri)
         {
-            this.code = code;
-            this.scope = scope;
-            this.state = state;
-            this.redirect_uri = redirect_uri;
+            this.Code = code;
+            this.Scope = scope;
+            this.State = state;
+            this.RedirectUri = redirect_uri;
+            this.ClientRedirectUri = client_redirect_uri;
         }
 
-        public string code { get; set; }
-        public string scope { get; set; }
-        public string state { get; set; }
-        public string redirect_uri { get; set; }
+        public string Code { get; set; }
+        public string Scope { get; set; }
+        public string State { get; set; }
+        public string RedirectUri { get; set; }
+        public string ClientRedirectUri { get; set; }
     }
 }

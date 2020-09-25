@@ -32,6 +32,5 @@ namespace myAuthApp.Models
         [BsonElement("googleAuth")]
         public AuthResponse GoogleAuth { get; set; }
 
-        // property to store ZachsAuthCenterToken
     }
 }

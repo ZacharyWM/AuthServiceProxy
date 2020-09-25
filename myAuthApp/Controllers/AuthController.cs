@@ -43,7 +43,6 @@ namespace myAuthApp.Controllers
         public async Task<IActionResult> AuthWithGoogleAsync(AuthCode authCode)
         {
             try{
-
                 // TODO: Write Token controller that accepts auth code and returns access token
 
                 var authResponse = await _googleAuth.GetToken(authCode);
@@ -65,7 +64,7 @@ namespace myAuthApp.Controllers
                     lastName = user.LastName,
                     email = user.EmailAddress,
                     roles = user.Roles,
-                    redirect_uri = $"https://www.hcss.com?auth_code={user.AuthCode}"
+                    client_redirect_uri = $"{authCode.ClientRedirectUri}?auth_code={user.AuthCode}"
                 });
             }
             catch(Exception ex){
