@@ -8,10 +8,6 @@ namespace myAuthApp.Models
     public class AuthResponse
     {
 
-        // [BsonId]
-        // [BsonRepresentation(BsonType.ObjectId)]
-        // public string Id { get; set; }
-
         [JsonProperty("access_token")]
         public string AccessToken { get; set; }
 

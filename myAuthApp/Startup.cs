@@ -8,6 +8,9 @@ using myAuthApp.Services;
 using myAuthApp.Services.MongoDB;
 using myAuthApp.Store.UserStore;
 
+// How to convert to serverless Function app ():
+// https://reynders.co/move-asp-net-core-to-azure-functions-in-4-steps/
+
 namespace myAuthApp
 {
     public class Startup

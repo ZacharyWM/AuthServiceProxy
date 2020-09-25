@@ -10,58 +10,64 @@ using System;
 
 
 
-namespace myAuthApp.Controllers
-{
+namespace myAuthApp.Controllers {
     [ApiController]
     [Route("[controller]")]
-    public class TokenController : CustomControllerBase
-    {
+    public class TokenController : CustomControllerBase {
 
+        private readonly ILogger<AuthController> _logger;
+        private readonly IGoogleAuth _googleAuth;
+        private readonly IUserStore _userStore;
 
-        public TokenController(ITokenService tokenService, IConfiguration config) 
-            : base(tokenService, config)
-        {
-
+        public TokenController(ILogger<AuthController> logger,
+                               ITokenService tokenService,
+                               IGoogleAuth googleAuth,
+                               IUserStore userStore,
+                               IConfiguration config)
+        : base(tokenService, config) {
+            _logger = logger;
+            _googleAuth = googleAuth;
+            _userStore = userStore;
         }
+
 
         [HttpPost("verify")]
-        public async Task<IActionResult> VerifyToken(string accessToken){
-
-
-            return Ok(new
-            {
-
-            });         
+        public async Task<IActionResult> VerifyToken(string accessToken) {
+            return Ok(new {
+                isValidAccessToken = _tokenService.ValidateToken(accessToken)
+            });
         }
 
-        [HttpPost("token")]
-        public async Task<IActionResult> Token(string authCode){
+        [HttpPost("exchange")]
+        public async Task<IActionResult> Token(AuthorizationCode authCode) {
 
-            // lookup user by authcode
+            User user = _userStore.FindUserWithAuthCode(authCode.Code);
 
-            // if user found, create access token, save for the user, and add token to cookies
+            if (user == null) {
+                return Unauthorized("Invalid authorization code.");
+            }
 
-            /*
-            string jwt = _tokenService.GetToken(user);
+            user.AccessToken = _tokenService.GetToken(user);
+            user.AuthCode = string.Empty;
 
-            AddAuthCookie(jwt);
-            */
+            bool validToken = _tokenService.ValidateToken(user.AccessToken);
 
-            // if not found, return Unauthorized? 
+            _ = _userStore.UpdateUser(user);
 
+            AddAuthCookie(user.AccessToken);
 
-
-            return Ok(new
-            {
-                // return user info here? And not from the auth controller?
-            });         
+            return Ok(new {
+                firstName = user.FirstName,
+                lastName = user.LastName,
+                email = user.EmailAddress,
+                roles = user.Roles
+            });
         }
 
 
-        // verify token method
+    }
 
-        // take a auth code, return access token
-
-
+    public class AuthorizationCode {
+        public string Code { get; set; }
     }
 }

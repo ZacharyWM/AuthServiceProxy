@@ -68,7 +68,7 @@ namespace myAuthApp.Services
 
                 return validatedToken != null;
             }
-            catch
+            catch(Exception ex)
             {
                 return false;
             }
