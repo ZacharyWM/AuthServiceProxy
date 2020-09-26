@@ -4,9 +4,9 @@ using System;
 
 namespace myAuthApp.Services {
     public interface IGoogleAuth {
-        Task<AuthResponse> GetToken(AuthCode authCode);
+        Task<IdentityProviderAuthResponse> GetToken(IdentityProviderAuthCodeDetails authCode);
 
-        Task<AuthResponse> RefreshToken(AuthCode authCode);
+        Task<IdentityProviderAuthResponse> RefreshToken(IdentityProviderAuthCodeDetails authCode);
 
     }
 }

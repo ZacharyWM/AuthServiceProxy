@@ -21,7 +21,7 @@ namespace myAuthApp.Store.UserStore {
             _collection = mongoDB.GetUserCollection();
         }
 
-        public User UpsertUserFromGoogleAuth(AuthResponse auth) {
+        public User UpsertFromGoogleAuth(IdentityProviderAuthResponse auth) {
             var findResult = _collection.Find(x => x.EmailAddress == auth.EmailAddress);
             if (findResult.CountDocuments() == 0) {
                 return InsertUserWithGoogleAuth(auth);
@@ -30,7 +30,7 @@ namespace myAuthApp.Store.UserStore {
             return UpdateUserWithGoogleAuth(auth);
         }
 
-        public User FindUserWithAuthCode(string authCode) {
+        public User FindByAuthCode(string authCode) {
             if (string.IsNullOrWhiteSpace(authCode)) {
                 return null;
             }
@@ -39,18 +39,26 @@ namespace myAuthApp.Store.UserStore {
                               .FirstOrDefault<User>();
         }
 
-        // TODO: Cannot update whole object. Must update select fields.
-        public Task UpdateUser(User updatedUser) {
+        public Task DeleteAuthCode(User updatedUser) {
             return Task.Run(() => {
                 _collection.FindOneAndUpdate(
                     new FilterDefinitionBuilder<User>().Where(x => x.Id == updatedUser.Id),
-                    new UpdateDefinitionBuilder<User>().Set(user => user, updatedUser)
+                    new UpdateDefinitionBuilder<User>().Set(x => x.AuthCode, string.Empty)
                 );
             });
         }
 
-        private User UpdateUserWithGoogleAuth(AuthResponse auth) {
-            UserInfo_Google userInfo = _googleAPIs.GetUserInfo(auth.AccessToken).Result;
+        public Task SetAccessToken(User updatedUser) {
+            return Task.Run(() => {
+                _collection.FindOneAndUpdate(
+                    new FilterDefinitionBuilder<User>().Where(x => x.Id == updatedUser.Id),
+                    new UpdateDefinitionBuilder<User>().Set(x => x.AccessToken, updatedUser.AccessToken)
+                );
+            });
+        }
+
+        private User UpdateUserWithGoogleAuth(IdentityProviderAuthResponse auth) {
+            GoogleUserInfo userInfo = _googleAPIs.GetUserInfo(auth.AccessToken).Result;
             string newAuthCode = AuthCodeUtility.GenerateAuthCode();
 
             var updatedUser = _collection.FindOneAndUpdate(
@@ -67,8 +75,8 @@ namespace myAuthApp.Store.UserStore {
             return updatedUser;
         }
 
-        private User InsertUserWithGoogleAuth(AuthResponse auth) {
-            UserInfo_Google userinfo = _googleAPIs.GetUserInfo(auth.AccessToken).Result;
+        private User InsertUserWithGoogleAuth(IdentityProviderAuthResponse auth) {
+            GoogleUserInfo userinfo = _googleAPIs.GetUserInfo(auth.AccessToken).Result;
 
             var newUser = new User();
             newUser.FirstName = userinfo.FirstName;

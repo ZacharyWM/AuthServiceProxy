@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using myAuthApp.Models;
 
-namespace myAuthApp.Services
-{
-    public interface ITokenService
-    {
+namespace myAuthApp.Services {
+    public interface ITokenService {
         string GetToken(User user);
 
-        bool ValidateToken(string token);
+        bool VerifyToken(string token);
 
         IEnumerable<Claim> GetAllClaims(string token);
-        
+
     }
 }

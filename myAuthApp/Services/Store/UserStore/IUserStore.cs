@@ -3,11 +3,12 @@ using myAuthApp.Models;
 
 namespace myAuthApp.Store.UserStore {
     public interface IUserStore {
-        User UpsertUserFromGoogleAuth(AuthResponse auth);
+        User UpsertFromGoogleAuth(IdentityProviderAuthResponse auth);
 
-        User FindUserWithAuthCode(string authCode);
+        User FindByAuthCode(string authCode);
 
-        Task UpdateUser(User updatedUser);
+        Task DeleteAuthCode(User updatedUser);
 
+        Task SetAccessToken(User updatedUser);
     }
 }

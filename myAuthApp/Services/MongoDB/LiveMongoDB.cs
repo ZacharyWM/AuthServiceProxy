@@ -4,17 +4,14 @@ using MongoDB.Driver;
 using myAuthApp.Models;
 
 
-namespace myAuthApp.Services.MongoDB
-{
-    public class LiveMongoDB : IMongoDB
-    {
+namespace myAuthApp.Services.MongoDB {
+    public class LiveMongoDB : IMongoDB {
         private MongoClient _client;
         IMongoCollection<User> _userCollection;
         private IConfiguration _config;
         private string ConnectionString => _config.GetConnectionString("MongoDBConnectionString");
 
-        public LiveMongoDB(IConfiguration config)
-        {
+        public LiveMongoDB(IConfiguration config) {
             _config = config;
 
             MongoClientSettings clientSettings = MongoClientSettings.FromUrl(

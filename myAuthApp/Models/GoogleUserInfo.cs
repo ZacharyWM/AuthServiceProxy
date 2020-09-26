@@ -1,13 +1,11 @@
 using Newtonsoft.Json;
 
-namespace myAuthApp.Models
-{
-    public class UserInfo_Google
-    {
+namespace myAuthApp.Models {
+    public class GoogleUserInfo {
 
         [JsonProperty("id")]
         public string Id { get; set; }
-        
+
         [JsonProperty("email")]
         public string Email { get; set; }
 

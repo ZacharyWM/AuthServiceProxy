@@ -28,7 +28,7 @@ namespace myAuthApp.Services {
             _clientFactory = clientFactory;
         }
 
-        public async Task<AuthResponse> GetToken(AuthCode authCode) {
+        public async Task<IdentityProviderAuthResponse> GetToken(IdentityProviderAuthCodeDetails authCode) {
             var queryParams = new Dictionary<string, string>() {
                                                     {"grant_type", "authorization_code"},
                                                     {"code", authCode.Code},
@@ -51,12 +51,12 @@ namespace myAuthApp.Services {
             return ConvertResultToAuthResponse(jsonResult);
         }
 
-        public async Task<AuthResponse> RefreshToken(AuthCode authCode) {
+        public async Task<IdentityProviderAuthResponse> RefreshToken(IdentityProviderAuthCodeDetails authCode) {
             throw new NotImplementedException();
         }
 
-        private AuthResponse ConvertResultToAuthResponse(string jsonResult) {
-            AuthResponse authResponse = JsonConvert.DeserializeObject<AuthResponse>(jsonResult);
+        private IdentityProviderAuthResponse ConvertResultToAuthResponse(string jsonResult) {
+            IdentityProviderAuthResponse authResponse = JsonConvert.DeserializeObject<IdentityProviderAuthResponse>(jsonResult);
 
             var handler = new JwtSecurityTokenHandler();
             JwtSecurityToken token = handler.ReadJwtToken(authResponse.IdToken);

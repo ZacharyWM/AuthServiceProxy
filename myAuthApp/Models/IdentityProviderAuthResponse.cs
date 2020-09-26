@@ -1,12 +1,8 @@
 using System;
 using Newtonsoft.Json;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
 
-namespace myAuthApp.Models
-{
-    public class AuthResponse
-    {
+namespace myAuthApp.Models {
+    public class IdentityProviderAuthResponse {
 
         [JsonProperty("access_token")]
         public string AccessToken { get; set; }

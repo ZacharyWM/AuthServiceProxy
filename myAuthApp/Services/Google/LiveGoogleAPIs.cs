@@ -9,32 +9,29 @@ using Newtonsoft.Json;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace myAuthApp.Services
-{
-    public class LiveGoogleAPIs : IGoogleAPIs
-    {
+namespace myAuthApp.Services {
+    public class LiveGoogleAPIs : IGoogleAPIs {
 
         private readonly IConfiguration _config;
         private readonly IHttpClientFactory _clientFactory;
 
 
-        public LiveGoogleAPIs(IConfiguration config, IHttpClientFactory clientFactory)
-        {
+        public LiveGoogleAPIs(IConfiguration config, IHttpClientFactory clientFactory) {
             _config = config;
             _clientFactory = clientFactory;
         }
 
 
-        public async Task<UserInfo_Google> GetUserInfo(string accessToken){
+        public async Task<GoogleUserInfo> GetUserInfo(string accessToken) {
 
             var client = _clientFactory.CreateClient();
-            var request = new HttpRequestMessage(HttpMethod.Get,"https://www.googleapis.com/oauth2/v2/userinfo");
+            var request = new HttpRequestMessage(HttpMethod.Get, "https://www.googleapis.com/oauth2/v2/userinfo");
             request.Headers.Add("Authorization", $"Bearer {accessToken}");
 
             var response = await client.SendAsync(request);
             string jsonResult = await response.Content.ReadAsStringAsync();
 
-            UserInfo_Google userInfo = JsonConvert.DeserializeObject<UserInfo_Google>(jsonResult);
+            GoogleUserInfo userInfo = JsonConvert.DeserializeObject<GoogleUserInfo>(jsonResult);
 
             return userInfo;
         }

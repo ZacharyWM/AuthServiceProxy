@@ -5,28 +5,20 @@ using myAuthApp.Services;
 using myAuthApp.Models;
 using myAuthApp.Store.UserStore;
 using System.Threading.Tasks;
-using static myAuthApp.Enums.AllEnums;
 using System;
 
 
 
 namespace myAuthApp.Controllers {
+
     [ApiController]
     [Route("[controller]")]
     public class TokenController : CustomControllerBase {
-
-        private readonly ILogger<AuthController> _logger;
-        private readonly IGoogleAuth _googleAuth;
         private readonly IUserStore _userStore;
-
-        public TokenController(ILogger<AuthController> logger,
-                               ITokenService tokenService,
-                               IGoogleAuth googleAuth,
+        public TokenController(ITokenService tokenService,
                                IUserStore userStore,
                                IConfiguration config)
         : base(tokenService, config) {
-            _logger = logger;
-            _googleAuth = googleAuth;
             _userStore = userStore;
         }
 
@@ -34,14 +26,14 @@ namespace myAuthApp.Controllers {
         [HttpPost("verify")]
         public async Task<IActionResult> VerifyToken(string accessToken) {
             return Ok(new {
-                isValidAccessToken = _tokenService.ValidateToken(accessToken)
+                isValidAccessToken = _tokenService.VerifyToken(accessToken)
             });
         }
 
         [HttpPost("exchange")]
-        public async Task<IActionResult> Token(AuthorizationCode authCode) {
+        public async Task<IActionResult> Token(AuthCode authCode) {
 
-            User user = _userStore.FindUserWithAuthCode(authCode.Code);
+            User user = _userStore.FindByAuthCode(authCode.Code);
 
             if (user == null) {
                 return Unauthorized("Invalid authorization code.");
@@ -50,9 +42,10 @@ namespace myAuthApp.Controllers {
             user.AccessToken = _tokenService.GetToken(user);
             user.AuthCode = string.Empty;
 
-            bool validToken = _tokenService.ValidateToken(user.AccessToken);
+            bool validToken = _tokenService.VerifyToken(user.AccessToken);
 
-            _ = _userStore.UpdateUser(user);
+            _ = _userStore.DeleteAuthCode(user);
+            _ = _userStore.SetAccessToken(user);
 
             AddAuthCookie(user.AccessToken);
 
@@ -65,9 +58,5 @@ namespace myAuthApp.Controllers {
         }
 
 
-    }
-
-    public class AuthorizationCode {
-        public string Code { get; set; }
     }
 }
