@@ -12,8 +12,9 @@ export const Login = (props) => {
 
   return (
     <div className="login-page">
+      <div id="welcomeToTheLoginPageMessage">Welcome to Zach's Auth Center</div>
       <div className="form">
-        <GoogleButton onClick={() => window.location.href = googleEndpoints.getAuthEndpoint(clientRedirectUri)} />
+        <GoogleButton type="dark" onClick={() => window.location.href = googleEndpoints.getAuthEndpoint(clientRedirectUri)} />
       </div>
     </div>
   )

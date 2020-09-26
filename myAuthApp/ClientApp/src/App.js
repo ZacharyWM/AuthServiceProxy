@@ -32,11 +32,11 @@ const App = (props) => {
  
   return (
     <AuthContext.Provider value={defaultAuthContextValue}>
-     <Layout>
+     {/* <Layout> */}
       <Route exact path='/' component={Login} />
       <Route exact path='/dashboard' component={Dashboard} />
       <Route exact path='/authorizing' component={Authorizing} />
-     </Layout>
+     {/* </Layout> */}
     </AuthContext.Provider>
 
   );

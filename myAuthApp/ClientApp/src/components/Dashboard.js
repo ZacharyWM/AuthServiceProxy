@@ -28,10 +28,16 @@ export const Dashboard = (props) => {
                 console.log(error)
              })
        
-    }, []) // should only run once
+    }, [])
+
+    if (user.firstName && user.firstName.length > 0){
+        return (
+            <div className="primaryFont">You made it to the dashboard, {user.firstName}!</div>
+        )
+    }
 
     return (
-        <div>You made it to the dashboard, {user.firstName}!</div>
+        <div className="primaryFont">Dashboard</div>
     )
 
 }

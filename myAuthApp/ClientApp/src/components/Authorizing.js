@@ -41,7 +41,7 @@ export const Authorizing = (props) => {
 
 
     return (
-        <div>Authorizing...</div>
+        <div className="primaryFont">Authorizing...</div>
     )
 
 }
