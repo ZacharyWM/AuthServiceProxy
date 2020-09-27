@@ -41,3 +41,9 @@ body {
     color: ivory;
     font-size: 1.2em;
 }
+
+.centerOnScreen{
+    position: fixed; /* or absolute */
+  top: 40%;
+  left: 40%;
+}
