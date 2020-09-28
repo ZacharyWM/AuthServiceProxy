@@ -8,8 +8,9 @@ export const Authorizing = (props) => {
     const history = useHistory()
 
     let size = 20
+    let radius = 10
 
-    let yMin = 30
+    let yMin = 40
     let yMax = yMin + size
     let yMidpoint = (yMin + yMax) / 2
 
@@ -25,13 +26,26 @@ export const Authorizing = (props) => {
 
    // const [angle, setAngle] = useState(90)
 
+   let getNextX = (currentX, change) => {
+        let nextX = currentX + change
+        if(nextX > xMax) {
+            nextX = xMax
+        }
+        if(nextX < xMin){
+            nextX = xMin
+        }
+        return nextX
+   } 
+
+   let solveForY = (x) => Math.sqrt(Math.pow(radius, 2) - Math.pow((x - 50),2)) + 50
+
     let styling = {
         position: 'fixed', /* or absolute */
         top: '30%', // min 30, max 50
         left: '40%' // min 40, max 60
     }
 
-    console.log(`x: ${coordinates.x}, y: ${coordinates.y}`)
+   // console.log(`x: ${coordinates.x}, y: ${coordinates.y}`)
 
 
     useEffect(() => {
@@ -39,24 +53,40 @@ export const Authorizing = (props) => {
         const interval = setInterval(() => {
 
             let quadrant_1 = coordinates.x <= xMidpoint && coordinates.y >= yMidpoint
-            let quadrant_2 = coordinates.x >= xMidpoint && coordinates.y >= yMidpoint
+            let quadrant_2 = coordinates.x > xMidpoint && coordinates.y > yMidpoint
             let quadrant_3 = coordinates.x >= xMidpoint && coordinates.y <= yMidpoint
-            let quadrant_4 = coordinates.x <= xMidpoint && coordinates.y <= yMidpoint
+            let quadrant_4 = coordinates.x < xMidpoint && coordinates.y <= yMidpoint
+
+
 
             if(quadrant_1){
-                setCoordinates(coordinates => ({x: (coordinates.x + changeSize), y: (coordinates.y + changeSize)}))
+                console.log('quad 1')
+                let nextX = getNextX(coordinates.x, changeSize)
+                let nextY = solveForY(nextX)
+                setCoordinates(coordinates => ({x: nextX, y: nextY}))
             }
             else if(quadrant_2){
-                setCoordinates(coordinates => ({x: (coordinates.x + changeSize), y: (coordinates.y - changeSize)}))
+                console.log('quad 2')
+                let nextX = getNextX(coordinates.x, changeSize)
+                let nextY = solveForY(nextX)
+                setCoordinates(coordinates => ({x: nextX, y: nextY}))
             }
             else if(quadrant_3){
-                setCoordinates(coordinates => ({x: (coordinates.x - changeSize), y: (coordinates.y - changeSize)}))
+                console.log('quad 3')
+
+                let nextX = getNextX(coordinates.x, -changeSize)
+                let nextY = solveForY(nextX)
+                nextY = nextY - (nextY - yMidpoint)
+                setCoordinates(coordinates => ({x: nextX, y: nextY}))
             }
             else if (quadrant_4){
-                setCoordinates(coordinates => ({x: (coordinates.x - changeSize), y: (coordinates.y + changeSize)}))
+                console.log('quad 4')
+                let nextX = getNextX(coordinates.x, changeSize)
+                let nextY = solveForY(nextX)
+                setCoordinates(coordinates => ({x: nextX, y: nextY}))
             }
 
-        }, 5);
+        }, 10);
         return () => clearInterval(interval);
 
     },[coordinates])
