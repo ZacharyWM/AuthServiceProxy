@@ -1,13 +1,15 @@
 import React, { useEffect, Fragment, useState } from 'react';
+import SvgRocket from './icons/SvgRocket';
+import SvgEarth from './icons/SvgEarth';
 
 
-export const AroundTheWorld = (props) => {
+const AroundTheWorld = (props) => {
 
     let yOffset = 50 // % distance from the top
     let xOffset = 50  // % distance from the left
 
     let radius = 15
-    let radianIncrement = 0.0025
+    let radianIncrement = 0.003
     let interval_ms = 1
 
     let [coordinates, setCoordinates] = useState({
@@ -26,8 +28,15 @@ export const AroundTheWorld = (props) => {
 
     let earthStyling = {
         position: 'fixed', /* or absolute */
-        top: `${yOffset}%`, 
-        left: `${xOffset}%`
+        top: `${yOffset - 6}%`, 
+        left: `${xOffset - 3}%`
+    }
+
+    let iconAttributeStyling = {
+        position: 'fixed', /* or absolute */
+        top: `95%`, 
+        left: `2%`,
+        fontSize: '10px'
     }
 
     useEffect(() => {
@@ -41,7 +50,7 @@ export const AroundTheWorld = (props) => {
             let nextX = (radius * Math.cos(nextRadian))
             let nextY = (radius * Math.sin(nextRadian))
             
-            let nextRocketAngle = nextRadian * (180/Math.PI) + 90
+            let nextRocketAngle = nextRadian * (180/Math.PI) + 135
 
             setCoordinates(() => ({
                 x: nextX, 
@@ -68,11 +77,12 @@ export const AroundTheWorld = (props) => {
     return ( 
         <Fragment>
             <div className=" primaryFont" style={rocketStyling}>
-
-                {'}-->'}
-
+                <SvgRocket/>
             </div>
-            <div className=" primaryFont" style={earthStyling}>earth</div>
+            <div className="primaryFont" style={earthStyling}>
+                <SvgEarth/>
+            </div>
+            <div className="primaryFont" style={iconAttributeStyling}>Icons made by <a href="https://www.flaticon.com/authors/dinosoftlabs" title="DinosoftLabs">DinosoftLabs</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
         </Fragment>
     )
 

@@ -3,7 +3,7 @@ import { useHistory } from 'react-router';
 import queryString from 'query-string'
 import axios from 'axios'
 import config from './../config/appConfigService'
-import AroundTheWorld from './AroundTheWorldAnimation'
+import AroundTheWorld from './AroundTheWorld'
 
 
 export const Authorizing = (props) => {
