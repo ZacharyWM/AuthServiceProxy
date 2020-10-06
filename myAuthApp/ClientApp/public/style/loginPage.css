@@ -14,18 +14,13 @@
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
 
-html{
-    background-color: #1e1e1e!;
-
-}
-
 body {
   background: #3E3E3E; 
   background: -webkit-linear-gradient(right, #3E3E3E, #1953b3);
   background: -moz-linear-gradient(right, #3E3E3E, #1953b3);
   background: -o-linear-gradient(right, #3E3E3E, #1953b3);
   background: linear-gradient(to left, #1E1E1E, #1E1E1E);
-  background-color: #1e1e1e!;
+  background-color: #1e1e1e;
   font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;      
