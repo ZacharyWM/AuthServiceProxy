@@ -7,13 +7,7 @@
   position: relative;
   z-index: 1;
   background: transparent;
-  /*  
-  background: -webkit-linear-gradient(right, #3E3E3E, #1953b3);
-  background: -moz-linear-gradient(right, #3E3E3E, #1953b3);
-  background: -o-linear-gradient(right, #3E3E3E, #1953b3); */
-  /* background: linear-gradient(to left, #ffffff, #1953b3);     */
   max-width: 360px;
-  /* background: -o-repeating-linear-gradient(to left, #ffffff, #1953b3); */
   margin: 0 auto 50px;
   padding: 45px;
   text-align: center;
@@ -26,6 +20,7 @@ body {
   background: -moz-linear-gradient(right, #3E3E3E, #1953b3);
   background: -o-linear-gradient(right, #3E3E3E, #1953b3);
   background: linear-gradient(to left, #1E1E1E, #1E1E1E);
+  background-color: #1e1e1e;
   font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;      

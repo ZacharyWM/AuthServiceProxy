@@ -43,10 +43,9 @@ export const Authorizing = (props) => {
 
 
     return (
-        <Fragment>
-            <div className="primaryFont" >Authorizing...</div>
-            <AroundTheWorld/>
-        </Fragment>
+            <AroundTheWorld>
+                {"Authorizing..."}
+            </AroundTheWorld>
 
     )
 
