@@ -2,14 +2,14 @@ import React, { useEffect, Fragment, useState } from 'react';
 
 const AroundTheWorld = (props) => {
 
-    let yOffset = 50 // % distance from the top
-    let xOffset = 50  // % distance from the left
+    let yOffset = 50 // vh from the top
+    let xOffset = 50  // vw from the left
 
     let radius = 15
     let radianIncrement = 0.003
     let interval_ms = 1
 
-    let [coordinates, setCoordinates] = useState({
+    let [rocketState, setRocketState] = useState({
         x: radius, 
         y: 0, 
         radian: 0.0,
@@ -18,30 +18,28 @@ const AroundTheWorld = (props) => {
 
     let rocketStyling = {
         position: 'fixed',
-        top: `${yOffset}%`, 
-        left: `${xOffset + radius}%`, 
+        top: `${yOffset}vh`, 
+        left: `${xOffset + radius}vw`, 
         transform: 'rotate(270deg)'
     }
 
     let earthStyling = {
         position: 'fixed',
-        top: `${yOffset - 6}%`, 
-        left: `${xOffset - 3}%`
+        top: `${yOffset - 6}vh`, 
+        left: `${xOffset - 4}vw`
     }
 
     let messageStyling = {
         margin: "auto",
         marginTop: '22vh',
         textAlign: 'center',
-        //border: '3px solid green',
         fontSize: '1.5em',
     }
 
-
     let iconAttributeStyling = {
         position: 'fixed',
-        top: `95%`, 
-        left: `2%`,
+        top: `95vh`, 
+        left: `2vw`,
         fontSize: '10px'
     }
 
@@ -49,7 +47,7 @@ const AroundTheWorld = (props) => {
 
         const interval = setInterval(() => {
 
-            let nextRadian = coordinates.radian += radianIncrement
+            let nextRadian = rocketState.radian + radianIncrement
             if(nextRadian >= (2 * Math.PI)){
                 nextRadian = 0.0
             }
@@ -58,7 +56,7 @@ const AroundTheWorld = (props) => {
             
             let nextRocketAngle = nextRadian * (180/Math.PI) + 135
 
-            setCoordinates(() => ({
+            setRocketState(() => ({
                 x: nextX, 
                 y: nextY, 
                 radian: nextRadian,
@@ -69,16 +67,16 @@ const AroundTheWorld = (props) => {
         }, interval_ms);
         return () => clearInterval(interval);
 
-    },[coordinates])
+    },[rocketState])
 
     // widthToHeightRatio is used to keep a constant distance between the earth and the rock (i.e. a perfectly circlular path)
     let widthToHeightRatio = window.screen.width/window.screen.height
-    let yLocation = coordinates.y + yOffset
-    let xLocation = (coordinates.x / widthToHeightRatio) + xOffset
+    let yLocation = rocketState.y + yOffset
+    let xLocation = (rocketState.x / widthToHeightRatio) + xOffset
 
-    rocketStyling.top = `${yLocation}%`
-    rocketStyling.left = `${xLocation}%`
-    rocketStyling.transform = `rotate(${coordinates.rocketAngle}deg)`
+    rocketStyling.top = `${yLocation}vh`
+    rocketStyling.left = `${xLocation - 1.5}vw`
+    rocketStyling.transform = `rotate(${rocketState.rocketAngle}deg)`
 
     return ( 
         <div>-

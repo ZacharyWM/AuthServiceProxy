@@ -44,7 +44,7 @@ export const Authorizing = (props) => {
 
     return (
             <AroundTheWorld>
-                Authorizing...
+                {"Authorizing..."}
             </AroundTheWorld>
 
     )
