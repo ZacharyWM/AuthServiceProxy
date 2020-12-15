@@ -13,6 +13,8 @@ export const Authorizing = (props) => {
 
         const { code, scope, state } = queryString.parse(props.location.search)
 
+        
+
         const payload = {
             "Code": code,
             "Scope": scope,
@@ -23,10 +25,10 @@ export const Authorizing = (props) => {
         
         axios.post("/auth/google", payload)
              .then(response => {
-                 const client_redirect_uri = response.data.client_redirect_uri
+                 const clientRedirectUri = response.data.client_redirect_uri
 
-                 if (client_redirect_uri && client_redirect_uri.length > 0){
-                    window.location = client_redirect_uri
+                 if (clientRedirectUri && clientRedirectUri.length > 0){
+                    window.location = clientRedirectUri
                  }
                  else {
                     history.push({

@@ -69,7 +69,7 @@ const AroundTheWorld = (props) => {
 
     },[rocketState])
 
-    // widthToHeightRatio is used to keep a constant distance between the earth and the rock (i.e. a perfectly circlular path)
+    // widthToHeightRatio is used to keep a constant distance between the earth and the rock
     let widthToHeightRatio = window.screen.width/window.screen.height
     let yLocation = rocketState.y + yOffset
     let xLocation = (rocketState.x / widthToHeightRatio) + xOffset
